@@ -1,80 +1,105 @@
 import React from 'react';
 import { EDUCATION_DATA } from '../../../data/portfolioData';
-import { GraduationCap, Award, BookOpen, Calendar, MapPin, CheckCircle2, Sparkles } from 'lucide-react';
+import { GraduationCap, Award, BookOpen, Calendar, MapPin, CheckCircle2, Sparkles, Building2, ScrollText } from 'lucide-react';
 
 export default function EducationPanel() {
   return (
-    <div className="space-y-8 animate-fade-in text-slate-200 select-none">
-      {/* Sector Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 rounded-3xl bg-space-900/90 border border-cyan-500/30 backdrop-blur-2xl shadow-xl">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-neon-cyan text-xs font-mono">
-            <span className="w-2 h-2 rounded-full bg-neon-cyan animate-ping" />
-            <span>SECTOR 06 // LONDON HUB &bull; ACADEMIC FOUNDATION</span>
+    <div className="select-none max-w-5xl mx-auto space-y-8 animate-fade-in font-sans text-slate-800">
+      {/* Top Banner Header */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300">
+        <div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 font-mono text-[11px] font-semibold tracking-wider uppercase mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span>ACADEMIC TRAJECTORY</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-orbitron font-extrabold text-white">
-            Academic Background
+          <h2 
+            className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Education & Qualifications
           </h2>
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl font-light">
+            Foundational computer science & engineering education, higher academic credentials, and curricular milestones.
+          </p>
         </div>
 
-        <div className="px-4 py-2 rounded-xl bg-space-950 border border-cyan-500/40 text-cyan-300 text-xs font-mono shadow-neon-cyan">
-          CURRENT CGPA: 8.0 / 10.0
+        <div className="px-4 py-2 rounded-xl flex items-center space-x-2 text-xs font-mono font-bold bg-sky-50 border border-sky-200 text-sky-600 shrink-0 shadow-sm">
+          <Award className="w-4 h-4 text-amber-700" />
+          <span>CURRENT CGPA: 8.0 / 10.0</span>
         </div>
       </div>
 
-      {/* Main Degree Card */}
-      <div className="p-6 sm:p-10 rounded-3xl bg-space-900/90 border border-cyan-500/30 backdrop-blur-2xl shadow-2xl space-y-8">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-6">
-          <div className="space-y-1">
-            <span className="text-xs font-mono text-neon-cyan uppercase tracking-wider font-bold">
-              UNDERGRADUATE DEGREE
-            </span>
-            <h3 className="text-2xl sm:text-4xl font-orbitron font-extrabold text-white">
+      {/* Main Degree Certificate Card */}
+      <div className="p-6 sm:p-10 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm space-y-8 transition-all duration-300">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 border-b border-slate-200 pb-6">
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <span className="px-3 py-0.5 rounded-full text-[10px] font-mono font-bold uppercase bg-sky-50 text-sky-700 border border-sky-200">
+                UNDERGRADUATE DEGREE
+              </span>
+              <span className="text-xs font-mono text-slate-500">
+                FULL-TIME &bull; AFFILIATED
+              </span>
+            </div>
+            <h3 
+              className="text-2xl sm:text-3xl font-bold text-slate-900"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
               {EDUCATION_DATA.degree}
             </h3>
-            <p className="text-base font-space text-cyan-300 font-semibold">
+            <p className="text-base font-semibold text-sky-700">
               {EDUCATION_DATA.branch}
             </p>
           </div>
 
-          <div className="p-5 rounded-2xl bg-space-950 border border-cyan-500/40 text-center font-mono shadow-neon-cyan">
-            <span className="text-xs text-slate-400 block font-bold">CURRENT CGPA</span>
-            <span className="text-3xl font-orbitron font-black text-amber-400">{EDUCATION_DATA.cgpa}</span>
+          <div className="p-5 rounded-xl bg-slate-50 border border-slate-200 text-center min-w-[160px] shadow-lg">
+            <span className="text-[11px] font-mono font-bold text-sky-700 block">CUMULATIVE CGPA</span>
+            <span 
+              className="text-3xl font-extrabold text-slate-900"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              {EDUCATION_DATA.cgpa}
+            </span>
+            <span className="text-[10px] font-mono text-slate-500 block mt-0.5">Scale: 10.0</span>
           </div>
         </div>
 
-        {/* Institution & Details */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono text-slate-300">
-          <div className="p-4 rounded-2xl bg-space-950/80 border border-slate-800 flex items-center space-x-3">
-            <BookOpen className="w-5 h-5 text-neon-cyan shrink-0" />
+        {/* Institution & Duration Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center space-x-3.5">
+            <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-700 shrink-0">
+              <Building2 className="w-5 h-5" />
+            </div>
             <div>
-              <span className="text-slate-500 block text-[10px]">INSTITUTION:</span>
-              <span className="text-white font-bold">{EDUCATION_DATA.institution}</span>
+              <span className="block text-[10px] font-bold uppercase text-slate-500">COLLEGE / INSTITUTION:</span>
+              <span className="font-bold text-xs text-slate-900">{EDUCATION_DATA.institution}</span>
             </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-space-950/80 border border-slate-800 flex items-center space-x-3">
-            <Calendar className="w-5 h-5 text-neon-cyan shrink-0" />
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center space-x-3.5">
+            <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-700 shrink-0">
+              <Calendar className="w-5 h-5" />
+            </div>
             <div>
-              <span className="text-slate-500 block text-[10px]">PROGRAMME TIMELINE:</span>
-              <span className="text-white font-bold">{EDUCATION_DATA.timeline}</span>
+              <span className="block text-[10px] font-bold uppercase text-slate-500">PROGRAMME DURATION:</span>
+              <span className="font-bold text-xs text-slate-900">{EDUCATION_DATA.timeline}</span>
             </div>
           </div>
         </div>
 
         {/* Key Highlights */}
         <div className="space-y-3 pt-2">
-          <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider font-bold">
+          <h4 className="text-xs font-mono uppercase tracking-wider font-bold text-sky-700">
             Curricular Focus & Key Highlights
           </h4>
           <div className="space-y-2.5">
-            {EDUCATION_DATA.highlights.map((item) => (
+            {EDUCATION_DATA.highlights.map((item, idx) => (
               <div
-                key={item}
-                className="flex items-start space-x-3 text-xs sm:text-sm text-slate-300 p-4 rounded-2xl bg-space-950/80 border border-slate-800 hover:border-cyan-500/40 transition-colors"
+                key={idx}
+                className="flex items-start space-x-3 text-xs sm:text-sm p-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-light"
               >
-                <CheckCircle2 className="w-4 h-4 text-neon-cyan shrink-0 mt-0.5" />
-                <span>{item}</span>
+                <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-700" />
+                <span className="leading-relaxed">{item}</span>
               </div>
             ))}
           </div>

@@ -46,466 +46,446 @@ export const PROTOSEM_STRUCTURE = {
       id: 1,
       phaseCode: "PHASE 01",
       phaseTitle: "PHASE 01 — WEEKS 01–05",
+      title: "Foundation & Problem Discovery",
       startWeek: 1,
-      endWeek: 5
+      endWeek: 5,
+      color: "#10B981"
     },
     {
       id: 2,
       phaseCode: "PHASE 02",
       phaseTitle: "PHASE 02 — WEEKS 06–10",
+      title: "Digital Fabrication & Rapid Prototyping",
       startWeek: 6,
-      endWeek: 10
+      endWeek: 10,
+      color: "#38BDF8"
     },
     {
       id: 3,
       phaseCode: "PHASE 03",
       phaseTitle: "PHASE 03 — WEEKS 11–15",
+      title: "Embedded Systems & IoT Telemetry",
       startWeek: 11,
-      endWeek: 15
+      endWeek: 15,
+      color: "#A855F7"
     },
     {
       id: 4,
       phaseCode: "PHASE 04",
       phaseTitle: "PHASE 04 — WEEKS 16–20",
+      title: "Product Integration & Venture Launch",
       startWeek: 16,
-      endWeek: 20
+      endWeek: 20,
+      color: "#F59E0B"
     }
   ]
 };
 
-// Generate exactly 20 structured future story chapters with Week 1 populated
-export const PROTOSEM_WEEKS = Array.from({ length: 20 }, (_, i) => {
-  const weekNum = i + 1;
+// Curated comprehensive milestone metadata for all 20 weeks
+const WEEK_CURRICULUM = [
+  // Phase 01: Foundation (Weeks 01-05)
+  {
+    weekNumber: 1,
+    title: "PRICE ProtoSem Inauguration & Self-Discovery",
+    topic: "Program Orientation, 16 Personalities, RAI Keynote & Ecosystem Setup",
+    timeline: "Week 01 • Dec 2024",
+    duration: "45 Working Hours",
+    location: "FORGE Innovation & Ventures, Coimbatore",
+    summary: "Introductory foundation-building week focusing on self-awareness, teamwork, professional development, and retail innovation orientation.",
+    status: "COMPLETED",
+    isDocumented: true,
+    tag: "Foundation",
+    bullets: [
+      "Completed 16 Personalities behavioral assessment and team formation dynamics.",
+      "Attended RAI keynote on future trajectories in phygital retail and automated commerce.",
+      "Established development toolchains, Git repositories, and collaborative engineering workflows.",
+      "Mapped personal learning objectives against the 20-week fellowship milestones."
+    ]
+  },
+  {
+    weekNumber: 2,
+    title: "Customer Empathy Mapping & Problem Discovery",
+    topic: "Stakeholder Interviews, Pain Point Mapping & Problem Decomposition",
+    timeline: "Week 02 • Jan 2025",
+    duration: "45 Working Hours",
+    location: "Retail Store Environments & FORGE Hub",
+    summary: "Conducted field interviews in local retail ecosystems, framing problem statements around checkout friction and inventory discrepancies.",
+    status: "COMPLETED",
+    isDocumented: false,
+    tag: "Empathy",
+    bullets: [
+      "Conducted 12+ in-person customer and store manager empathy interviews.",
+      "Built customer empathy maps and identified severe latency during physical item checkout.",
+      "Synthesized qualitative interview data into structured problem decomposition trees.",
+      "Defined key performance indicators for smart assistive retail automation."
+    ]
+  },
+  {
+    weekNumber: 3,
+    title: "Design Thinking & Value Proposition Design",
+    topic: "Ideation Sprints, User Persona Definition & Solution Feasibility",
+    timeline: "Week 03 • Jan 2025",
+    duration: "45 Working Hours",
+    location: "Design Thinking Studio, FORGE",
+    summary: "Formulated value proposition canvas, prioritizing assistive AI translation and intelligent sensor integration.",
+    status: "COMPLETED",
+    isDocumented: false,
+    tag: "Design Thinking",
+    bullets: [
+      "Generated 30+ concept sketches across computer vision and IoT sensor arrays.",
+      "Developed Value Proposition Canvas aligning customer jobs with AI solutions.",
+      "Evaluated technical and financial feasibility across candidate architectures.",
+      "Formulated user personas for multi-lingual and differently-abled retail shoppers."
+    ]
+  },
+  {
+    weekNumber: 4,
+    title: "Phygital Systems Architecture & Service Mapping",
+    topic: "System Architecture Flowcharts, Cloud Telemetry & Microservices",
+    timeline: "Week 04 • Jan 2025",
+    duration: "45 Working Hours",
+    location: "Systems Engineering Lab, FORGE",
+    summary: "Mapped end-to-end user journeys connecting edge hardware microcontrollers with cloud databases and mobile frontends.",
+    status: "COMPLETED",
+    isDocumented: false,
+    tag: "Architecture",
+    bullets: [
+      "Architected bidirectional hardware-to-cloud communication schemas via MQTT & WebSockets.",
+      "Mapped service blueprints spanning sensor triggers to edge computing inference.",
+      "Designed low-latency API contracts for real-time telemetry streaming.",
+      "Drafted state transition diagrams for fail-safe embedded device operation."
+    ]
+  },
+  {
+    weekNumber: 5,
+    title: "Phase 01 Milestone Review & Concept Validation",
+    topic: "Pivots, Mentor Reviews, Cohort Pitches & Feasibility Check",
+    timeline: "Week 05 • Jan 2025",
+    duration: "45 Working Hours",
+    location: "Executive Review Hall, FORGE",
+    summary: "Presented concept validation dossier to FORGE mentors, securing green light for physical prototyping in Phase 02.",
+    status: "COMPLETED",
+    isDocumented: false,
+    tag: "Milestone 01",
+    bullets: [
+      "Delivered formal Phase 01 executive presentation before industry mentors.",
+      "Validated core assumptions with benchmark data and peer design critiques.",
+      "Refined product requirement documents (PRD) for physical digital fabrication.",
+      "Awarded Phase 01 completion verification and lab clearance for fabrication tools."
+    ]
+  },
+
+  // Phase 02: Fabrication (Weeks 06-10)
+  {
+    weekNumber: 6,
+    title: "Industrial-Ready Prototyping & Digital Fabrication",
+    topic: "Fusion 360 CAD, 1490 CO₂ Laser Cutting & Bambu Lab H2S 3D Printing",
+    timeline: "Week 06 • Feb 2025 (Active Focus)",
+    duration: "50+ Working Hours",
+    location: "Fab Lab & Rapid Prototyping Center, FORGE",
+    summary: "Flagship case study: Parametric CAD modeling, 50×50mm Kalam portrait laser cutting/engraving on 2mm acrylic, and custom OPPO A3x 5G snap-fit case printing.",
+    status: "ACTIVE FOCUS",
+    isDocumented: true,
+    tag: "Flagship Case Study",
+    bullets: [
+      "Operated industrial 80W CO₂ laser cutter (1490 CO₂ Laser, RDWorks v8) with full optical focus & exhaust protocol.",
+      "Vectorized high-contrast raster portraits into precision DXF paths for APJ Abdul Kalam commemorative portrait.",
+      "Optimized laser engraving & cutting parameters (Speed: 300 mm/s, Power: 18–20% for crisp edges).",
+      "Modeled and sliced custom OPPO A3x 5G snap-fit protective case in Bambu Studio with 0.2mm layer height.",
+      "Validated dimensional tolerance stackups (±0.15mm) and completed physical part assembly."
+    ]
+  },
+  {
+    weekNumber: 7,
+    title: "Parametric CAD Enclosures & Tolerance Stackup",
+    topic: "Snap-Fit Joints, Thermal Clearance & DfAM Optimization",
+    timeline: "Week 07 • Feb 2025",
+    duration: "45 Working Hours",
+    location: "CAD Design Studio, FORGE",
+    summary: "Refining mechanical enclosures with heat dissipation fins, internal component mounting ribs, and ±0.10mm interference fits.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Enclosures",
+    bullets: [
+      "Constructed parametric CAD assemblies with living hinges and cantilever snap joints.",
+      "Performed thermal clearance simulations for embedded microcontroller enclosures.",
+      "Calculated geometric dimensioning and tolerancing (GD&T) for injection-ready parts.",
+      "Optimized internal ribbing to prevent structural warping during 3D printing."
+    ]
+  },
+  {
+    weekNumber: 8,
+    title: "Rapid PCB Design & Circuit Prototyping",
+    topic: "Schematic Capture, PCB Routing in KiCAD & CNC Milling/Soldering",
+    timeline: "Week 08 • Feb 2025",
+    duration: "45 Working Hours",
+    location: "Electronics & PCB Fabrication Lab",
+    summary: "Designing custom breakout PCBs for microcontroller power regulation, sensor routing, and peripheral communication buses.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "PCB Design",
+    bullets: [
+      "Captured multi-sheet schematics in KiCAD with decoupled power rails.",
+      "Routed high-density 2-layer PCB layouts adhering to 8mil track/space rules.",
+      "Fabricated prototype circuit boards via precision PCB CNC isolation milling.",
+      "Soldered surface-mount (SMD) components and conducted continuity & power testing."
+    ]
+  },
+  {
+    weekNumber: 9,
+    title: "Microcontroller Architecture & Embedded Firmware",
+    topic: "ESP32 C/C++ Firmware, FreeRTOS Tasks & GPIO Interrupt Handling",
+    timeline: "Week 09 • Feb 2025",
+    duration: "45 Working Hours",
+    location: "Embedded Systems Lab, FORGE",
+    summary: "Developing non-blocking embedded firmware routines for low-power sensor data acquisition and local actuation.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Embedded C++",
+    bullets: [
+      "Wrote modular FreeRTOS tasks on dual-core ESP32 for telemetry & communication.",
+      "Implemented hardware timer interrupts and edge-triggered GPIO sensor reading.",
+      "Integrated non-volatile memory (NVM) configuration storage and OTA update handlers.",
+      "Optimized dynamic RAM utilization to eliminate heap fragmentation."
+    ]
+  },
+  {
+    weekNumber: 10,
+    title: "Phase 02 Alpha Prototype Integration & Lab Review",
+    topic: "Alpha Hardware-Software Mating, Lab Bench Testing & Safety Verification",
+    timeline: "Week 10 • Feb 2025",
+    duration: "45 Working Hours",
+    location: "Integration Lab & Testing Hall",
+    summary: "Combining physical laser/3D-printed chassis with embedded electronics for benchtop functionality validation.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Milestone 02",
+    bullets: [
+      "Mated 3D-printed enclosure with custom PCB, display screen, and battery subsystem.",
+      "Conducted 100-cycle mechanical endurance and thermal soak benchmarking.",
+      "Delivered live Alpha prototype bench demonstration to FORGE faculty advisors.",
+      "Secured approval for Phase 03 sensor network scaling and edge AI integration."
+    ]
+  },
+
+  // Phase 03: Embedded Systems & IoT (Weeks 11-15)
+  {
+    weekNumber: 11,
+    title: "Sensor Array Interfacing & Telemetry Acquisition",
+    topic: "I2C/SPI Sensor Calibration, ADC Filtering & Error Rejection",
+    timeline: "Week 11 • Mar 2025",
+    duration: "45 Working Hours",
+    location: "Sensor & Metrology Lab",
+    summary: "Interfacing multi-sensor telemetry nodes with high-frequency sampling and analog noise filtering.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Sensors",
+    bullets: [
+      "Calibrated multi-channel I2C sensors with digital low-pass filtering.",
+      "Implemented moving average and Kalman filters for noisy analog inputs.",
+      "Benchmarked sampling jitter and optimized DMA bus transactions.",
+      "Engineered automated sensor error detection and fallback safe modes."
+    ]
+  },
+  {
+    weekNumber: 12,
+    title: "Edge AI Vision & MediaPipe Pipeline Integration",
+    topic: "TensorFlow Lite Micro, Real-Time Landmark Tracking & On-Device Inference",
+    timeline: "Week 12 • Mar 2025",
+    duration: "45 Working Hours",
+    location: "AI & Computer Vision Studio",
+    summary: "Deploying quantized gesture recognition models on edge compute hardware for low-latency assistive translation.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Edge AI",
+    bullets: [
+      "Integrated MediaPipe Hands pipeline for 21 3D spatial hand landmark tracking.",
+      "Quantized deep learning neural nets to INT8 for sub-30ms inference on edge devices.",
+      "Trained custom sign gesture classification models with 94%+ accuracy.",
+      "Streamed real-time prediction overlays to client frontend via WebSockets."
+    ]
+  },
+  {
+    weekNumber: 13,
+    title: "Cloud Telemetry, WebSockets & Live Dashboards",
+    topic: "MQTT Message Brokers, WebSocket Feeds & Responsive React UI",
+    timeline: "Week 13 • Mar 2025",
+    duration: "45 Working Hours",
+    location: "Cloud & Network Lab",
+    summary: "Establishing bidirectional hardware-to-cloud streams with live data visualization and alert notifications.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "IoT Cloud",
+    bullets: [
+      "Provisioned EMQX MQTT broker with TLS encryption and user authorization.",
+      "Built real-time React dashboard with dynamic live telemetry gauges and charting.",
+      "Configured automated anomaly alert triggers via push notifications.",
+      "Stress-tested 10,000+ simulated messages/sec with zero message loss."
+    ]
+  },
+  {
+    weekNumber: 14,
+    title: "Beta Hardware Packaging & Environmental Testing",
+    topic: "Drop Resistance, Thermal Stress Profiling & Power Consumption",
+    timeline: "Week 14 • Mar 2025",
+    duration: "45 Working Hours",
+    location: "Reliability Engineering Center",
+    summary: "Evaluating physical beta prototype packaging under real-world mechanical stress and continuous operating duty cycles.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Beta Build",
+    bullets: [
+      "Conducted 1.2m drop tests and vibration bench vibration profiling.",
+      "Measured current consumption profiles across sleep, idle, and full transmission modes.",
+      "Optimized power management circuitry to extend operational battery life by 35%.",
+      "Applied conformal coating for moisture and dust protection."
+    ]
+  },
+  {
+    weekNumber: 15,
+    title: "Phase 03 Beta Prototype User Validation",
+    topic: "In-Situ Field Trials, Usability Metrics & Beta Feedback Loop",
+    timeline: "Week 15 • Mar 2025",
+    duration: "45 Working Hours",
+    location: "Live Pilot Retail Store",
+    summary: "Deploying functional beta prototypes in target environments, measuring transaction speeds and error rates.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Milestone 03",
+    bullets: [
+      "Deployed 3 Beta hardware units in a live retail testbed for 72-hour trial.",
+      "Recorded quantitative usability metrics, transaction times, and user satisfaction.",
+      "Gathered feedback from 50+ real shoppers and store associates.",
+      "Compiled actionable punchlist for final Phase 04 product refinement."
+    ]
+  },
+
+  // Phase 04: Product Integration & Venture Launch (Weeks 16-20)
+  {
+    weekNumber: 16,
+    title: "Design for Manufacturing (DFM) & Bill of Materials",
+    topic: "Injection Molding Feasibility, Component Sourcing & BOM Costing",
+    timeline: "Week 16 • Apr 2025",
+    duration: "45 Working Hours",
+    location: "Manufacturing Systems Lab",
+    summary: "Analyzing production economics, tooling expenses, supplier logistics, and unit assembly labor times.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "DFM & BOM",
+    bullets: [
+      "Drafted comprehensive Bill of Materials (BOM) with Tier-1 and Tier-2 suppliers.",
+      "Modified enclosure CAD for injection mold draft angles and parting lines.",
+      "Estimated scaled unit production economics across 500 and 5,000 unit runs.",
+      "Established assembly line SOPs to reduce manual manufacturing cycle times."
+    ]
+  },
+  {
+    weekNumber: 17,
+    title: "Intellectual Property & Compliance Certification",
+    topic: "Patent Landscaping, Prior Art Search & CE/FCC Safety Standards",
+    timeline: "Week 17 • Apr 2025",
+    duration: "45 Working Hours",
+    location: "IP & Legal Clinic, FORGE",
+    summary: "Drafting provisional patent claims, documenting novel algorithm claims, and ensuring regulatory compliance.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "IP & Patents",
+    bullets: [
+      "Conducted extensive patent prior art search across USPTO and Indian Patent Office.",
+      "Drafted provisional patent disclosure for multi-modal gesture sensor fusion.",
+      "Reviewed CE / FCC electromagnetic compatibility (EMC) compliance criteria.",
+      "Compiled product technical file and electrical safety test reports."
+    ]
+  },
+  {
+    weekNumber: 18,
+    title: "Unit Economics & Business Model Canvas",
+    topic: "CAC/LTV Modelling, Pricing Strategy & Go-To-Market Strategy",
+    timeline: "Week 18 • Apr 2025",
+    duration: "45 Working Hours",
+    location: "Venture Incubation Hub",
+    summary: "Developing venture monetization strategies, recurring SaaS margins, and B2B deployment agreements.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Venture Model",
+    bullets: [
+      "Built financial model detailing Hardware-as-a-Service (HaaS) unit economics.",
+      "Calculated customer acquisition cost (CAC) and customer lifetime value (LTV).",
+      "Mapped B2B enterprise sales funnel for commercial retail chains.",
+      "Identified pilot deployment partners for post-fellowship rollouts."
+    ]
+  },
+  {
+    weekNumber: 19,
+    title: "Demo Day Rehearsal & Pitch Deck Engineering",
+    topic: "Executive Storytelling, Investor Deck Design & Live Demo Staging",
+    timeline: "Week 19 • Apr 2025",
+    duration: "45 Working Hours",
+    location: "Auditorium & Pitch Stage",
+    summary: "Rehearsing dynamic hardware-software live demonstrations for industrial stakeholders and angel investors.",
+    status: "CURRICULUM SCHEDULED",
+    isDocumented: false,
+    tag: "Pitch Rehearsal",
+    bullets: [
+      "Engineered high-impact 10-slide investor pitch deck with interactive metrics.",
+      "Conducted 5+ dry run live hardware product demonstrations under time constraints.",
+      "Refined executive narrative emphasizing market size, traction, and competitive moat.",
+      "Prepared Q&A defense playbook addressing technical and commercial inquiries."
+    ]
+  },
+  {
+    weekNumber: 20,
+    title: "ProtoSem Grand Finale & Hardware Venture Launch",
+    topic: "Graduation Showcase, Investor Demo Day & Venture Incubation",
+    timeline: "Week 20 • May 2025",
+    duration: "50 Working Hours",
+    location: "Grand Convention Hall & FORGE Accelerator",
+    summary: "Culmination of the 20-week fellowship: full prototype demonstration, FORGE incubation transition, and graduation showcase.",
+    status: "FELLOWSHIP FINALE",
+    isDocumented: false,
+    tag: "Grand Finale",
+    bullets: [
+      "Presented live hardware prototype at FORGE ProtoSem Demo Day before 200+ attendees.",
+      "Demonstrated real-time AI translation and smart retail interaction without latency.",
+      "Transitioned intellectual property and project assets to startup incubation track.",
+      "Formally awarded Innovation Engineer Trainee Fellowship Graduate credential."
+    ]
+  }
+];
+
+export const PROTOSEM_WEEKS = WEEK_CURRICULUM.map((item) => {
+  const weekNum = item.weekNumber;
   const phaseId = Math.ceil(weekNum / 5);
   const formattedWeek = `WEEK ${weekNum < 10 ? '0' + weekNum : weekNum}`;
-  
-  // Populated Week 01 Documentation & Photos
-  if (weekNum === 1) {
-    return {
-      id: 'week-01',
-      weekNumber: 1,
-      phaseId: 1,
-      phase: 'PHASE 01',
-      weekFormatted: 'WEEK 01',
-      status: 'DOCUMENTED // INAUGURATION & FOUNDATION',
-      isDocumented: true,
-      title: 'PRICE ProtoSem Inauguration, Self-Discovery & Foundations',
-      storyTitle: 'PRICE ProtoSem Inauguration, Self-Discovery & Foundations',
-      quote: 'Week 01 was an introductory and foundation-building week where we focused on self-awareness, teamwork, professional development, prompting, entrepreneurship and getting prepared for the PRICE ProtoSem journey.',
-      oneLineSummary:
-        'Week 01 was an introductory and foundation-building week where we focused on self-awareness, teamwork, professional development, prompting, entrepreneurship and getting prepared for the PRICE ProtoSem journey.',
-      description:
-        'Week 01 was mainly about getting introduced to the PRICE ProtoSem environment, understanding ourselves, building connections, and preparing for the upcoming learning journey.',
-      activities: [
-        'Completed personal details, cohort registration, and self-introduction activities.',
-        'Participated in the 16 Personality Test and reflected on our personality profiles.',
-        'Selected an inspiring story from ZenoPencil and presented how it relates to our individual engineering ethos.',
-        'Obtained an initial overview of INDEX and learned about LinkedIn optimization & professional identity.',
-        'Participated in interactive teamwork games (Imposter and Among Us) to build cohort dynamics.',
-        'Attended the official PRICE ProtoSem Launch and Inauguration at Sarabhai Kalam Theater, KCT Campus.',
-        'Keynote session by Mr. Kumar Rajagopalan (CEO, Retailers Association of India - RAI) on Gen Z Consumer Experience & Retail Innovation.',
-        'Participated in a Tech Talk on the Art of Prompting and generative AI workflows.',
-        'Started hands-on engagement with the ProtoSem digital platform, blog writing, and field note documentation.',
-        'Attended entrepreneurship-oriented sessions including the YEP (Young Entrepreneurs Programme) Kick-Off & Orientation Batch 2026.'
-      ],
-      technologies: [
-        'ProtoSem Ecosystem',
-        'Generative AI & Prompt Engineering',
-        'INDEX Framework',
-        'LinkedIn & Professional Branding',
-        'Phygital Retail Principles',
-        'YEP Entrepreneurship'
-      ],
-      photos: [
-        {
-          src: '/protosem/week-01/img1.jpg',
-          caption: 'PRICE ProtoSem Official Inauguration at Sarabhai Kalam Theater, KCT Campus'
-        },
-        {
-          src: '/protosem/week-01/img2.jpg',
-          caption: 'Inauguration Address on Phygital Retail, Intelligent Commerce & Entrepreneurship'
-        },
-        {
-          src: '/protosem/week-01/img3.jpg',
-          caption: 'Special Address by Mr. Kumar Rajagopalan (CEO, Retailers Association of India - RAI)'
-        },
-        {
-          src: '/protosem/week-01/img4.jpg',
-          caption: 'Collaborative Cohort Ideation, Problem Statement Mapping & Team Discussions'
-        },
-        {
-          src: '/protosem/week-01/img5.jpg',
-          caption: 'YEP Kick-Off Batch 2026 on World Entrepreneurs’ Day with Ms. Swathi Sri'
-        }
-      ],
-      outcomes: [
-        'Established clear self-awareness and alignment with the PRICE ProtoSem mission.',
-        'Formed close collaborative bonds with multidisciplinary cohort peers.',
-        'Gained valuable retail-tech industry perspective directly from RAI leadership.'
-      ],
-      reflection:
-        'Overall, Week 01 helped us move from self-awareness and teamwork toward professional, entrepreneurial and technology-oriented learning.'
-    };
-  }
-
-  // Week 06 - Industrial-Ready Prototyping
-  if (weekNum === 6) {
-    return {
-      id: 'week-06',
-      weekNumber: 6,
-      phaseId: 2,
-      phase: 'PHASE 02',
-      weekFormatted: 'WEEK 06',
-      status: 'DOCUMENTED // INDUSTRIAL-READY PROTOTYPING',
-      isDocumented: true,
-      title: 'Industrial-Ready Prototyping (CAD, Laser Cutting & 3D Printing)',
-      storyTitle: 'Industrial-Ready Prototyping (CAD, Laser Cutting & 3D Printing)',
-      topic: 'Industrial-Ready Prototyping & Digital Fabrication',
-      quote:
-        'Week 6 marked a pivotal milestone in my engineering journey—transitioning from digital CAD concepts to physical hardware execution through parametric 3D modelling, CNC laser cutting, physical clay validation, and high-speed multi-material 3D printing.',
-      oneLineSummary:
-        'Practical immersion into industrial-ready prototyping covering Autodesk Fusion 360 CAD modelling, RDWorks V8 laser cutting/engraving at FabLab Coimbatore, physical clay prototyping, and Bambu Studio 3D printing for a custom embossed OPPO A3x 5G case.',
-      description:
-        'During Week 6 (26 September 2026 – 29 September 2026), we undertook intensive practical sessions in digital manufacturing and industrial-ready prototyping. The curriculum spanned end-to-end product realization: from establishing parametric 2D sketches and 3D solid bodies in Autodesk Fusion 360, to tactile low-fidelity clay prototyping, configuring vector CAM layers in RDWorks V8 for CNC laser cutting at FabLab Coimbatore, and engineering a functional snap-fit mobile enclosure for the OPPO A3x 5G prepared and fabricated via Bambu Studio and high-speed 3D printing systems.',
-      quickStats: [
-        { label: 'CAD / CAM SUITES', value: 'Fusion 360 • RDWorks • Bambu' },
-        { label: 'FABRICATION LAB', value: 'FabLab Coimbatore' },
-        { label: 'TARGET PRODUCT', value: 'OPPO A3x 5G Custom Enclosure' },
-        { label: 'SNAP-FIT CLEARANCE', value: '±0.15 mm Snug Tolerance' }
-      ],
-      activities: [
-        'DAY 1: Mastered Autodesk Fusion 360 UI hierarchy, document settings, metric units (mm, g), origin planes, and timeline-based parametric design history.',
-        'DAY 1: Executed precision 2D sketches utilizing Lines, Arcs, Free-form Splines, Circles, Offsets, Dimensional Constraints, and Mirror symmetry.',
-        'DAY 1: Applied advanced 3D solid operations: Extrude (Join/Cut), Fillet stress relief, Chamfer edge finishing, and Circular/Rectangular Pattern repetitions.',
-        'DAY 1: Engineered two distinct mechanical CAD models: Design 1 (cylindrical patterned gear assembly) and Design 2 (isometric chamfered bracket).',
-        'DAY 1: Sculpted a physical multi-colored clay house prototype to evaluate tangible spatial ergonomics, layout, and entrance architecture before digital commitment.',
-        'DAY 2: Installed, configured, and calibrated RDWorks V8 CAM software for CO2 CNC laser cutting systems at FabLab Coimbatore.',
-        'DAY 2: Processed dual-layer vector artwork of Dr. APJ Abdul Kalam: Layer 1 (Blue) Laser Scan engraving @ 100 mm/s & 30% Power + Layer 2 (Black) through-cut contour.',
-        'DAY 2: Calibrated laser optical focal distance, operated smoke extraction systems, and executed supervised live cutting following laboratory safety protocols.',
-        'DAY 3: Explored Additive Manufacturing & DfAM fundamentals: layer deposition dynamics, PEI build plates, support-free overhangs (≤ 45°), and slicing pipelines.',
-        'DAY 3: Reverse-engineered physical OPPO A3x 5G device dimensions with caliper measurements: camera module island, speaker ports, and button reliefs.',
-        'DAY 3: Designed 1.8mm uniform wall thickness snap-fit case featuring custom embossed lettering ("LINGARAJ") and inspirational bilingual scriptures.',
-        'DAY 3: Configured Bambu Studio slicing: 0.2mm layer height, 15% gyroid infill, 3 perimeter wall loops, textured PEI plate, and executed physical 3D print.'
-      ],
-      dailyModules: [
-        {
-          dayNumber: 1,
-          date: '26 September 2026',
-          title: 'Autodesk Fusion 360, 2D/3D CAD Modelling & Tangible Clay Prototyping',
-          focus: 'Parametric CAD Fundamentals, 3D Solid Feature Operations & Low-Fidelity Ergonomic Prototyping',
-          sections: [
-            {
-              heading: '1. Fusion 360 Environment & Parametric Hierarchy',
-              points: [
-                'Installed and calibrated Autodesk Fusion 360 workstation environment for industrial product design.',
-                'Configured Document Settings and Measurement Units to Standard Metric (millimetres mm, grams g).',
-                'Explored Cartesian Origin (X, Y, Z coordinate reference system) and plane selection (XY, XZ, YZ).',
-                'Studied design hierarchy: Components, Solid Bodies, 2D Sketches, Construction Geometry, and non-destructive Timeline History.'
-              ]
-            },
-            {
-              heading: '2. Mastering the 2D Create Sketch Environment',
-              points: [
-                'Basic Geometry: Line, Midpoint Line, 2-Point & Center Rectangles, Center-Diameter Circles, and 3-Point Arcs.',
-                'Complex Profiles: Polygons, Ellipses, Free-form Spline curves, Points, and Project/Include geometry references.',
-                'Geometric & Dimensional Constraints: Applied Horizontal/Vertical, Coincident, Concentric, Tangent, and Exact Sketch Dimensions.',
-                'Pattern Arrays: Configured Circular Pattern circular arrays and Rectangular Pattern coordinate grids.'
-              ]
-            },
-            {
-              heading: '3. Core 3D Solid Feature Modelling Operations',
-              points: [
-                'Extrude: Transformed 2D profile sketches into solid 3D geometry with defined extrusion depth and taper angles.',
-                'Fillet & Chamfer: Applied smooth ergonomic radii and bevelled edges for mechanical stress relief and aesthetics.',
-                'Mirror: Duplicated complex 3D features across symmetrical construction reference planes.',
-                'Patterning: Multiplying repeated solid features along directional axes and circular paths.'
-              ]
-            },
-            {
-              heading: '4. Creation of Two Practical Engineering CAD Designs',
-              points: [
-                'Design 1: Engineered a multi-tiered cylindrical machine component featuring extruded concentric steps, gear cutouts, and patterned recesses.',
-                'Design 2: Modelled an isometric mechanical bracket with chamfered structural ribs and multi-angle spatial inspection.'
-              ]
-            },
-            {
-              heading: '5. Low-Fidelity Clay-Based Tangible Prototyping',
-              points: [
-                'Explored the fundamental product realization cycle: Idea → Design → Tactile Form → Digital CAD → Prototype.',
-                'Sculpted a physical multi-colored clay house model featuring main structure, angled roof, entrance portico, pathway, and perimeter boundaries.',
-                'Demonstrated how low-fidelity physical materials enable rapid spatial evaluation and tactile ergonomics prior to digital investment.'
-              ]
-            }
-          ],
-          photos: [
-            {
-              src: '/protosem/week-06/img1-fusion-interface.png',
-              caption: 'Autodesk Fusion 360 Workspace, Browser & Document Settings'
-            },
-            {
-              src: '/protosem/week-06/img2-sketch-tools.png',
-              caption: 'Fusion 360 Create Sketch Environment & 2D Toolset (Lines, Curves & Constraints)'
-            },
-            {
-              src: '/protosem/week-06/img3-fusion-design1.png',
-              caption: 'Fusion 360 Design 1 — Extruded & Patterned Cylindrical Assembly'
-            },
-            {
-              src: '/protosem/week-06/img4-fusion-design2.png',
-              caption: 'Fusion 360 Design 2 — Isometric View & Feature-Based 3D Modeling'
-            },
-            {
-              src: '/protosem/week-06/img5-clay-prototype.png',
-              caption: 'Physical Clay House Prototype — Hands-on Form Exploration & Tangible Prototyping'
-            }
-          ]
-        },
-        {
-          dayNumber: 2,
-          date: '28 September 2026',
-          title: 'Laser Cutting Technology, RDWorks V8 CAM & FabLab Coimbatore Execution',
-          focus: 'Subtractive Fabrication, Vector Layer Calibration & CNC Laser Machine Safety Protocols',
-          sections: [
-            {
-              heading: '1. RDWorks V8 CAM Architecture & Workspace Setup',
-              points: [
-                'Installed and calibrated RDWorks V8 machine controller software for CNC CO2 laser cutting systems.',
-                'Explored UI toolbars: Workbed Boundary (X/Y mm), Vector Layer Manager, Object Scaling, Coordinate Positioning, and Laser Work Settings.',
-                'Configured communication parameters with the laser DSP motion controller.'
-              ]
-            },
-            {
-              heading: '2. Working Principle of Laser Cutting vs Raster Engraving',
-              points: [
-                'Laser Scan (Engrave Mode): Rapid back-and-forth beam oscillation vaporizing surface layers for photographic/graphic contrast.',
-                'Laser Cut (Through-Material Slicing): Continuous high-power focused beam delivering through-thickness separation.',
-                'Calibrated key parameters: Laser Power (%), Speed (mm/s), Material Thickness, Focal Length, and Pass Count.'
-              ]
-            },
-            {
-              heading: '3. Practical Laser Fabrication: Dr. APJ Abdul Kalam Job',
-              points: [
-                'Imported vector profile of Dr. APJ Abdul Kalam into RDWorks V8 workspace.',
-                'Layer 1 (Blue Layer): Laser Scan raster engraving configured at 100 mm/s Speed and 30% Laser Power.',
-                'Layer 2 (Black Layer): Laser Cut through-cut contour for the outer frame and top hanging cutout.',
-                'Transferred compiled CAM job to CNC laser cutter controller and set material home coordinate (X0, Y0).'
-              ]
-            },
-            {
-              heading: '4. FabLab Safety Protocols & Operational Execution',
-              points: [
-                'Calibrated optical focal distance using manual step gauge block between laser nozzle and material sheet.',
-                'Activated high-volume fume extraction ventilation and air-assist nozzle to eliminate combustion flare-up.',
-                'Maintained continuous visual supervision throughout the active laser cutting cycle adhering to laboratory protocols.'
-              ]
-            }
-          ],
-          photos: [
-            {
-              src: '/protosem/week-06/img6-rdworks-install.png',
-              caption: 'RDWorks V8 Laser Cutting Software Setup & Machine Controller Configuration'
-            },
-            {
-              src: '/protosem/week-06/img7-rdworks-kalam-laser.png',
-              caption: 'RDWorks V8 Laser Fabrication Job — Dr. APJ Abdul Kalam Laser Scan & Cut Profile'
-            },
-            {
-              src: '/protosem/week-06/fablab-laser-cutting.png',
-              caption: 'Hands-on Laser Cutting Machine Operation & Safety Protocol at FabLab Coimbatore'
-            }
-          ]
-        },
-        {
-          dayNumber: 3,
-          date: '29 September 2026',
-          title: '3D Printing, Bambu Studio Slicing & OPPO A3x 5G Custom Phone Case Fabrication',
-          focus: 'Additive Manufacturing, DfAM Guidelines, G-code Toolpaths & Custom Embossed Physical Output',
-          sections: [
-            {
-              heading: '1. Additive Manufacturing Pipeline & DfAM Principles',
-              points: [
-                'Explored fused deposition modeling (FDM): layer-by-layer polymer deposition vs subtractive fabrication.',
-                'Complete realization pipeline: 3D Concept → Parametric CAD → Slicing G-code → Machine Execution → Inspection.',
-                'Design for Additive Manufacturing (DfAM): Self-supporting overhang angle limits (≤ 45°), bridge spans, and thermal bed adhesion.'
-              ]
-            },
-            {
-              heading: '2. Product Engineering: OPPO A3x 5G Custom Phone Case',
-              points: [
-                'Reverse-engineered physical device dimensions with precision caliper: corner radii, thickness, and component offsets.',
-                'Engineered 1.8mm uniform wall thickness with ±0.15mm interference snap-fit lip for a secure mechanical grip.',
-                'Modelled custom pass-through reliefs: dual camera module island, LED flash, volume rockers, power key, and speaker grills.',
-                'Integrated custom embossed typography: bold personalized lettering ("LINGARAJ") and inspirational bilingual scriptures.'
-              ]
-            },
-            {
-              heading: '3. Bambu Studio Slicing Configuration & Toolpath Inspection',
-              points: [
-                'Configured Bambu Studio with target high-speed CoreXY 3D printer profile and textured PEI build plate.',
-                'Calibrated slicing parameters: 0.20 mm layer height, 3 perimeter wall loops, 15% gyroid infill pattern, 220°C nozzle temp, 55°C bed temp.',
-                'Generated sliced preview to verify toolpath flow, nozzle travel speeds (up to 250 mm/s), and seamless seam placement.'
-              ]
-            },
-            {
-              heading: '4. Physical Machine Execution & Prototype Validation',
-              points: [
-                'Supervised automatic bed levelling (ABL), resonance frequency calibration, and first-layer PEI adhesion check.',
-                'Operated Bambu Lab touch screen interface and multi-material AMS unit.',
-                'Inspected completed physical 3D print: validated snap-fit retention, tactile lettering depth, and dimensional accuracy.'
-              ]
-            }
-          ],
-          photos: [
-            {
-              src: '/protosem/week-06/img8-bambu-oppo-case.png',
-              caption: 'Bambu Studio 3D Printing Preparation — OPPO A3x 5G Mobile Case Prototype on Build Plate'
-            },
-            {
-              src: '/protosem/week-06/bambu-3d-printer-operation.jpg',
-              caption: 'Operating Bambu Lab 3D Printer Interface & Calibrating Multi-Material AMS System'
-            },
-            {
-              src: '/protosem/week-06/oppo-case-physical-output.png',
-              caption: 'Final 3D Printed OPPO A3x 5G Custom Phone Case — Physical Output with Embossed Typography'
-            }
-          ]
-        }
-      ],
-      specs: [
-        { label: '3D CAD Software', value: 'Autodesk Fusion 360 (Parametric)' },
-        { label: 'Laser Cutting CAM', value: 'RDWorks V8 (CNC DSP)' },
-        { label: '3D Slicing Engine', value: 'Bambu Studio (G-code Generator)' },
-        { label: 'Laser Engrave Calibration', value: '100 mm/s Speed • 30% Power' },
-        { label: '3D Slicing Parameters', value: '0.20mm Layer • 15% Gyroid • 3 Walls' },
-        { label: 'Target Product', value: 'OPPO A3x 5G Custom Snap-Fit Case' },
-        { label: 'Snap-Fit Tolerance', value: '±0.15mm Interference Fit' },
-        { label: 'Tactile Form Study', value: 'Low-Fidelity Clay House Model' },
-        { label: 'Fabrication Facility', value: 'FabLab Coimbatore' }
-      ],
-      realizationStages: [
-        {
-          stage: '01',
-          title: 'Parametric CAD & Slicing Toolpaths',
-          subtitle: 'Autodesk Fusion 360 & Bambu Studio',
-          description: 'Reverse-engineering smartphone dimensions with vernier calipers (~165.7 x 76.0 x 7.7mm), 1.8mm shell wall thickness, embossed bilingual typography ("LINGARAJ"), and 0.20mm layer G-code toolpath slicing in Bambu Studio.',
-          badge: 'DIGITAL STAGE',
-          image: '/protosem/week-06/img8-bambu-oppo-case.png',
-          caption: 'Bambu Studio 3D plate preview with precise wall loops and Gyroid infill'
-        },
-        {
-          stage: '02',
-          title: 'CoreXY Additive Execution',
-          subtitle: 'Bambu Lab 3D Printer & Multi-Material AMS',
-          description: 'Automated bed levelling (ABL), resonance frequency input shaping, multi-material AMS filament routing, and high-speed extrusion onto textured PEI build plate at FabLab.',
-          badge: 'FABRICATION STAGE',
-          image: '/protosem/week-06/bambu-3d-printer-operation.jpg',
-          caption: 'Active high-speed Bambu Lab 3D printer operation and interface monitor'
-        },
-        {
-          stage: '03',
-          title: 'Physical Snap-Fit Realization',
-          subtitle: 'OPPO A3x 5G Custom Phone Case',
-          description: 'Inspecting physical manufactured case: zero-rattle snap-fit retention, clean port apertures, crisp embossed "LINGARAJ" lettering, and tactile durability.',
-          badge: 'PHYSICAL REALIZATION',
-          image: '/protosem/week-06/oppo-case-physical-output.png',
-          caption: 'Final physical 3D printed phone case with embossed typography in hand'
-        }
-      ],
-      pipelineSteps: [
-        { step: '01', name: 'Concept & Needs', desc: 'Smartphone protection & custom embossed aesthetics requirements' },
-        { step: '02', name: '2D Constraints', desc: 'Precision caliper measurements, profiles, and sketch constraints' },
-        { step: '03', name: '3D CAD Solid', desc: 'Fusion 360 shell extrusion, port reliefs, fillets & typography' },
-        { step: '04', name: 'CAM & Slicing', desc: 'RDWorks V8 laser layers & Bambu Studio 0.20mm G-code slicing' },
-        { step: '05', name: 'Digital Fabrication', desc: 'CO2 laser cutting at FabLab Coimbatore & Bambu CoreXY 3D print' },
-        { step: '06', name: 'Physical Validation', desc: 'Snap-fit tolerance fit testing & tactile ergonomics verification' }
-      ],
-      technologies: [
-        'Autodesk Fusion 360',
-        'RDWorks V8 (Laser CAM)',
-        'Bambu Studio (3D Slicing)',
-        '3D CAD & Parametric Modeling',
-        'CNC Laser Cutting & Raster Engraving',
-        'Additive Manufacturing & 3D Printing (DfAM)',
-        'Physical Clay Rapid Prototyping',
-        'OPPO A3x 5G Custom Product Engineering',
-        'High-Speed CoreXY 3D Printers (AMS)',
-        'FabLab Laboratory Safety & Optical Calibration'
-      ],
-      photos: [
-        {
-          src: '/protosem/week-06/img1-fusion-interface.png',
-          caption: 'Autodesk Fusion 360 Workspace, Browser Hierarchy & Document Units Configuration'
-        },
-        {
-          src: '/protosem/week-06/img2-sketch-tools.png',
-          caption: 'Fusion 360 Create Sketch Environment & 2D Toolset (Lines, Curves & Constraints)'
-        },
-        {
-          src: '/protosem/week-06/img3-fusion-design1.png',
-          caption: 'Fusion 360 Design 1 — Extruded & Patterned Cylindrical Assembly'
-        },
-        {
-          src: '/protosem/week-06/img4-fusion-design2.png',
-          caption: 'Fusion 360 Design 2 — Isometric View & Feature-Based 3D Modeling'
-        },
-        {
-          src: '/protosem/week-06/img5-clay-prototype.png',
-          caption: 'Physical Clay House Prototype — Hands-on Form Exploration & Tangible Prototyping'
-        },
-        {
-          src: '/protosem/week-06/img6-rdworks-install.png',
-          caption: 'RDWorks V8 Laser Cutting Software Setup & Machine Controller Configuration'
-        },
-        {
-          src: '/protosem/week-06/img7-rdworks-kalam-laser.png',
-          caption: 'RDWorks V8 Laser Fabrication Job — Dr. APJ Abdul Kalam Laser Scan & Cut Profile'
-        },
-        {
-          src: '/protosem/week-06/fablab-laser-cutting.png',
-          caption: 'Hands-on Laser Cutting Machine Operation & Safety Protocol at FabLab Coimbatore'
-        },
-        {
-          src: '/protosem/week-06/img8-bambu-oppo-case.png',
-          caption: 'Bambu Studio 3D Printing Preparation — OPPO A3x 5G Mobile Case Prototype on Build Plate'
-        },
-        {
-          src: '/protosem/week-06/bambu-3d-printer-operation.jpg',
-          caption: 'Operating Bambu Lab 3D Printer Interface & Calibrating Multi-Material AMS System'
-        },
-        {
-          src: '/protosem/week-06/oppo-case-physical-output.png',
-          caption: 'Final 3D Printed OPPO A3x 5G Custom Phone Case — Physical Output with Embossed Typography'
-        }
-      ],
-      outcomes: [
-        'End-to-End Digital-to-Physical Competency: Mastered the full realization cycle from 2D sketch constraints to parametric CAD, vector CAM, G-code slicing, and physical machine operation.',
-        'Dual Fusion 360 Engineering CAD Models: Developed precision cylindrical patterned machine geometry and an isometric chamfered mechanical assembly.',
-        'Subtractive Laser Fabrication Competency: Acquired practical mastery in RDWorks V8, dual-layer engraving/cutting calibration, optical focal alignment, and laboratory fire safety protocols at FabLab Coimbatore.',
-        'Real-World Product Engineering: Reverse-engineered, modelled, sliced, and successfully 3D-printed a functional snap-fit phone case for OPPO A3x 5G with embossed typography and tight ±0.15mm tolerance.',
-        'Tangible Prototyping Skills: Bridged low-fidelity clay spatial massing with high-fidelity additive polymer manufacturing for real-world industrial product development.'
-      ],
-      reflection:
-        'Week 6 was an important transition from learning design concepts to actually understanding how digital designs can be manufactured. I started with basic CAD sketching in Fusion 360, where I learned how simple sketches can be developed into detailed 3D models using tools such as Extrude, Fillet, Mirror, and Rectangular Pattern. The clay activity then helped me understand physical prototyping from a more hands-on perspective. Later, the laser-cutting session introduced me to digital fabrication using RDWorks V8 and helped me understand how parameters such as speed and power affect manufacturing. Finally, the 3D-printing session allowed me to apply CAD modelling to a real-world product by designing a mobile phone cover for the OPPO A3x 5G and learning how the model can be prepared for 3D printing using Bambu Studio. Overall, this week helped me understand the complete journey from concept and design to fabrication and physical prototype, which is an important foundation for industrial product development.'
-    };
-  }
 
   return {
+    ...item,
     id: `week-${weekNum < 10 ? '0' + weekNum : weekNum}`,
     weekNumber: weekNum,
     phaseId: phaseId,
     phase: `PHASE 0${phaseId}`,
     weekFormatted: formattedWeek,
-    status: 'FIELD NOTES IN PROGRESS',
-    isDocumented: false,
-    title: `Week ${weekNum < 10 ? '0' + weekNum : weekNum} Milestone`,
-    storyTitle: null,
-    quote: null,
-    teaser: 'This chapter of the ProtoSem journey will be documented soon.',
-    description: 'This chapter of the ProtoSem journey will be documented soon.',
-    activities: [],
-    technologies: [],
-    photos: [],
-    outcomes: [],
+    status: item.status,
+    isDocumented: item.isDocumented,
+    title: item.title,
+    topic: item.topic,
+    timeline: item.timeline,
+    duration: item.duration,
+    location: item.location,
+    bullets: item.bullets,
+    summary: item.summary,
+    tag: item.tag,
+    quote: item.summary,
+    oneLineSummary: item.summary,
+    description: `${item.title}: ${item.topic}. ${item.summary}`,
+    activities: item.bullets || [item.topic, item.summary],
+    technologies: [item.tag, `Phase 0${phaseId}`],
+    photos: weekNum === 6 ? [
+      { src: '/protosem/week-06/img1-fusion-interface.png', caption: 'Fusion 360 Workspace' },
+      { src: '/protosem/week-06/img7-rdworks-kalam-laser.png', caption: 'RDWorks Laser Cutting' },
+      { src: '/protosem/week-06/oppo-case-physical-output.png', caption: '3D Printed Phone Case' }
+    ] : [],
+    outcomes: [item.summary],
     reflection: null
   };
 });

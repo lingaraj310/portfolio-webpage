@@ -1,3 +1,5 @@
+import * as THREE from 'three';
+
 // Procedural Geo-Matrix & Landmass coordinate density generator
 // Generates accurate dot-matrix clusters representing Earth's continents
 
@@ -55,7 +57,7 @@ export function latLngToVector3(lat, lng, radius, altitude = 0) {
   const z = r * Math.sin(phi) * Math.sin(theta);
   const y = r * Math.cos(phi);
   
-  return { x, y, z };
+  return new THREE.Vector3(x, y, z);
 }
 
 // Generate 3D curved Great-Circle Arc between two lat/lng pairs

@@ -1,264 +1,279 @@
 import React, { useState } from 'react';
+import { 
+  ExternalLink, 
+  Sparkles, 
+  Layers, 
+  CheckCircle2, 
+  ArrowRight, 
+  Eye, 
+  X, 
+  Cpu, 
+  BookOpen, 
+  Bot 
+} from 'lucide-react';
 import { PROJECTS_DATA } from '../../../data/portfolioData';
-import { Cpu, Sparkles, AlertCircle, CheckCircle2, Code2, Play, Terminal, Send, ArrowUpRight } from 'lucide-react';
 import { sound } from '../../../utils/audioEffects';
 
+function GithubIcon({ className = "w-4 h-4" }) {
+  return (
+    <svg className={className} fill="currentColor" viewBox="0 0 24 24">
+      <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+    </svg>
+  );
+}
+
 export default function ProjectsPanel() {
-  const [activeTab, setActiveTab] = useState('projects'); // 'projects' | 'simulator'
+  const [selectedProject, setSelectedProject] = useState(null);
 
-  // Interactive Simulator States
-  const [selectedGesture, setSelectedGesture] = useState('A');
-  const [simOutput, setSimOutput] = useState('Detected: Letter [A] • ISL Alphabet • Confidence: 99.4%');
-  const [jpedQuery, setJpedQuery] = useState('Explain binary search simply');
-  const [jpedResponse, setJpedResponse] = useState(null);
-  const [isSimulating, setIsSimulating] = useState(false);
-
-  const handleTestGesture = (letter) => {
-    sound.playSelect();
-    setSelectedGesture(letter);
-    setIsSimulating(true);
-    setSimOutput('PROCESSING CNN TENSORFLOW PIPELINE...');
-    setTimeout(() => {
-      setIsSimulating(false);
-      setSimOutput(`Detected Gesture: [${letter}] • Indian Sign Language Alphabet • Confidence: 98.7%`);
-    }, 400);
-  };
-
-  const handleJpedTest = (e) => {
-    e.preventDefault();
-    sound.playSelect();
-    setIsSimulating(true);
-    setTimeout(() => {
-      setIsSimulating(false);
-      setJpedResponse({
-        explanation: "Think of searching for a word in a dictionary: instead of reading from page 1, you open in the exact middle. If your word comes earlier alphabetically, you ignore the right half. You repeat this halving process at every step — finding any word in just O(log N) operations!",
-        concept: "Adaptive Divide & Conquer",
-        diagnostic: "Interactive Analogy Model"
-      });
-    }, 500);
-  };
+  const featuredProject = PROJECTS_DATA[0]; // Sign Bridge AI
+  const otherProjects = PROJECTS_DATA.slice(1);
 
   return (
-    <div className="space-y-8 animate-fade-in text-slate-200 select-none">
-      {/* Sector Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 rounded-3xl bg-space-900/90 border border-cyan-500/30 backdrop-blur-2xl shadow-xl">
-        <div className="space-y-1">
-          <div className="flex items-center space-x-2 text-neon-cyan text-xs font-mono">
-            <span className="w-2 h-2 rounded-full bg-neon-cyan animate-ping" />
-            <span>SECTOR 02 // TOKYO HUB &bull; MAJOR PROJECTS</span>
-          </div>
-          <h2 className="text-2xl sm:text-3xl font-orbitron font-extrabold text-white">
-            Major Software & Innovation Projects
-          </h2>
+    <div className="w-full space-y-10 animate-fade-in font-sans text-slate-800">
+      {/* 1. Header Section */}
+      <section className="space-y-3">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 font-mono text-[11px] font-semibold tracking-wider uppercase">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+          <span>CASE STUDIES & TECHNICAL PROTOTYPES</span>
         </div>
+        <h1 
+          className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight"
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+        >
+          Engineering Projects
+        </h1>
+        <p className="text-sm sm:text-base text-slate-600 max-w-2xl leading-relaxed font-light">
+          Production-grade applications, assistive artificial intelligence, and adaptive cognitive software built with modern engineering workflows.
+        </p>
+      </section>
 
-        <div className="flex items-center space-x-2">
-          <button
-            onClick={() => {
-              sound.playSelect();
-              setActiveTab('projects');
-            }}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
-              activeTab === 'projects'
-                ? 'bg-neon-cyan text-black shadow-neon-cyan'
-                : 'bg-space-950 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            PROJECT ARCHITECTURES
-          </button>
-          <button
-            onClick={() => {
-              sound.playSelect();
-              setActiveTab('simulator');
-            }}
-            className={`px-4 py-2 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer flex items-center space-x-1.5 ${
-              activeTab === 'simulator'
-                ? 'bg-neon-cyan text-black shadow-neon-cyan'
-                : 'bg-space-950 text-slate-400 hover:text-white border border-slate-800'
-            }`}
-          >
-            <Play className="w-3.5 h-3.5" />
-            <span>LIVE SIMULATOR</span>
-          </button>
-        </div>
-      </div>
+      {/* 2. Featured Project Hero Card (Sign Bridge AI) */}
+      {featuredProject && (
+        <section className="relative p-6 sm:p-8 lg:p-10 rounded-2xl bg-white border border-sky-200 backdrop-blur-2xl shadow-sm overflow-hidden transition-all duration-300 hover:border-sky-500/50">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-sky-50 rounded-full blur-3xl pointer-events-none" />
 
-      {/* 1. Dedicated One Box Per Project Layout */}
-      {activeTab === 'projects' ? (
-        <div className="space-y-8">
-          {PROJECTS_DATA.map((proj, idx) => (
-            <section
-              key={proj.id}
-              className="p-6 sm:p-10 rounded-3xl bg-space-900/90 border border-cyan-500/30 backdrop-blur-2xl shadow-2xl space-y-6 transition-all duration-300 hover:border-cyan-500/60"
-            >
-              {/* Project Card Header */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-5">
-                <div className="space-y-1">
-                  <div className="flex items-center space-x-2">
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-bold bg-cyan-500/20 text-neon-cyan border border-cyan-500/40 uppercase">
-                      PROJECT 0{idx + 1} &bull; {proj.category}
-                    </span>
-                  </div>
-                  <h3 className="text-2xl sm:text-3xl font-orbitron font-extrabold text-white pt-1">
-                    {proj.title}
-                  </h3>
-                  <p className="text-sm font-space text-cyan-300 font-medium">
-                    {proj.subtitle}
-                  </p>
-                </div>
+          {/* Top Badge */}
+          <div className="flex items-center justify-between gap-4 mb-6 border-b border-slate-200 pb-4 relative z-10">
+            <span className="text-xs font-mono font-bold uppercase tracking-wider px-3.5 py-1 rounded-full flex items-center space-x-2 bg-sky-50 text-sky-700 border border-sky-200">
+              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+              <span>FLAGSHIP FEATURED CASE STUDY</span>
+            </span>
 
-                {/* Status Badge */}
-                <div className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-space-950 border border-cyan-500/40 shadow-neon-cyan shrink-0">
-                  <div className="w-2.5 h-2.5 rounded-full bg-neon-cyan animate-pulse" />
-                  <span className="font-mono text-xs text-slate-200 font-bold">
-                    {proj.statusLabel}
-                  </span>
-                </div>
-              </div>
-
-              {/* Full Detailed Description */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider font-bold">
-                  PROJECT OVERVIEW & CORE ARCHITECTURE
-                </h4>
-                <div className="text-sm sm:text-base text-slate-200 font-space leading-relaxed space-y-3 p-5 rounded-2xl bg-space-950/80 border border-slate-800">
-                  {proj.fullDescription.split('\n\n').map((paragraph, pIdx) => (
-                    <p key={pIdx}>
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </div>
-
-              {/* Key Capabilities & Highlights */}
-              <div className="space-y-3">
-                <h4 className="text-xs font-mono text-neon-cyan uppercase tracking-wider font-bold flex items-center space-x-1.5">
-                  <Sparkles className="w-4 h-4" />
-                  <span>KEY SYSTEM CAPABILITIES & FEATURES</span>
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                  {proj.highlights.map((highlight, hIdx) => (
-                    <div
-                      key={hIdx}
-                      className="flex items-start space-x-2.5 text-xs sm:text-sm text-slate-300 p-3.5 rounded-xl bg-space-950/60 border border-slate-800/90"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-neon-cyan shrink-0 mt-0.5" />
-                      <span>{highlight}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Technology Stack Tags */}
-              <div className="pt-2">
-                <h4 className="text-xs font-mono text-slate-400 uppercase tracking-wider font-bold mb-2 flex items-center space-x-1.5">
-                  <Code2 className="w-4 h-4 text-neon-cyan" />
-                  <span>TECHNOLOGIES & TOOLS</span>
-                </h4>
-                <div className="flex flex-wrap gap-2">
-                  {proj.stack.map((tech) => (
-                    <span
-                      key={tech}
-                      className="px-3.5 py-1.5 rounded-xl bg-space-950 border border-cyan-500/30 text-xs font-mono text-cyan-300"
-                    >
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </section>
-          ))}
-        </div>
-      ) : (
-        /* 2. Interactive Sandbox Simulator */
-        <div className="p-6 sm:p-10 rounded-3xl bg-space-900/90 border border-cyan-500/30 backdrop-blur-2xl shadow-2xl space-y-8 animate-fade-in">
-          <div className="flex items-center justify-between border-b border-slate-800 pb-4">
-            <div className="space-y-1">
-              <span className="text-xs font-mono text-neon-cyan uppercase font-bold">
-                SANDBOX SIMULATION
-              </span>
-              <h3 className="text-2xl font-orbitron font-extrabold text-white">
-                Live Prototype Simulator
-              </h3>
-            </div>
-            <span className="px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-400 text-xs font-mono text-neon-cyan">
-              INTERACTIVE TESTBED
+            <span className="text-xs font-mono font-semibold px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600">
+              {featuredProject.category}
             </span>
           </div>
 
-          {/* SignBridge Gesture Simulation */}
-          <div className="space-y-4 p-6 rounded-2xl bg-space-950/80 border border-slate-800">
-            <h4 className="text-base font-orbitron font-bold text-white flex items-center space-x-2">
-              <span className="text-neon-cyan">01</span>
-              <span>Sign Bridge AI &bull; ISL Gesture Inference Simulator</span>
-            </h4>
-            <p className="text-xs sm:text-sm text-slate-300 font-space">
-              Click any Indian Sign Language (ISL) alphabet to simulate real-time camera landmark detection & inference:
-            </p>
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            <div className="lg:col-span-7 space-y-4">
+              <h2 
+                className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                {featuredProject.title}
+              </h2>
+              <p className="text-sm font-semibold text-sky-700">
+                {featuredProject.subtitle}
+              </p>
+              <p className="text-sm text-slate-600 leading-relaxed font-light">
+                {featuredProject.problem}
+              </p>
 
-            <div className="flex flex-wrap gap-2.5 pt-1">
-              {['A', 'B', 'C', 'D', 'E', 'H', 'L', 'O', 'V', 'Z'].map((letter) => (
+              {/* Highlights List */}
+              <div className="space-y-2 pt-2">
+                {featuredProject.highlights.slice(0, 3).map((hl, i) => (
+                  <div key={i} className="flex items-start space-x-2 text-xs sm:text-sm font-medium text-slate-800">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-700" />
+                    <span>{hl}</span>
+                  </div>
+                ))}
+              </div>
+
+              {/* Tech Stack Chips */}
+              <div className="flex flex-wrap gap-2 pt-2">
+                {featuredProject.stack.map((st, i) => (
+                  <span
+                    key={i}
+                    className="font-mono text-[11px] font-semibold text-slate-600 px-3 py-1 bg-slate-100 border border-slate-200 rounded-lg"
+                  >
+                    {st}
+                  </span>
+                ))}
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex flex-wrap gap-3 pt-4">
                 <button
-                  key={letter}
-                  onClick={() => handleTestGesture(letter)}
-                  className={`w-11 h-11 rounded-xl font-orbitron font-extrabold text-sm transition-all cursor-pointer flex items-center justify-center ${
-                    selectedGesture === letter
-                      ? 'bg-neon-cyan text-black shadow-neon-cyan scale-110'
-                      : 'bg-space-900 border border-slate-800 text-slate-300 hover:border-cyan-500/50 hover:text-white'
-                  }`}
+                  onClick={() => {
+                    sound.playSelect();
+                    setSelectedProject(featuredProject);
+                  }}
+                  className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-900 font-semibold text-xs sm:text-sm shadow-lg shadow-sky-500/25 hover:-translate-y-0.5 transition-all cursor-pointer"
                 >
-                  {letter}
+                  <Eye className="w-4 h-4" />
+                  <span>View Case Study Blueprint</span>
                 </button>
-              ))}
+
+                <a
+                  href="https://github.com/lingaraj310"
+                  target="_blank"
+                  rel="noreferrer"
+                  onClick={() => sound.playSelect()}
+                  className="inline-flex items-center space-x-2 px-6 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200/80 border border-slate-200 text-slate-900 font-semibold text-xs sm:text-sm transition-all hover:-translate-y-0.5 cursor-pointer shadow-md"
+                >
+                  <GithubIcon className="w-4 h-4 text-slate-900" />
+                  <span>GitHub Repository ↗</span>
+                </a>
+              </div>
             </div>
 
-            <div className="p-4 rounded-xl bg-space-900 border border-cyan-500/40 space-y-1 font-mono">
-              <div className="text-[10px] text-slate-500">INFERENCE TELEMETRY OUTPUT:</div>
-              <div className="text-xs sm:text-sm font-bold text-neon-cyan flex items-center space-x-2">
-                <Terminal className="w-4 h-4 shrink-0" />
-                <span>{simOutput}</span>
+            {/* Right Visual Teaser */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="w-full aspect-video sm:aspect-square max-w-sm rounded-2xl p-5 flex flex-col justify-between border border-slate-200 bg-slate-50 backdrop-blur-xl shadow-sm">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-sky-700">
+                    COMPUTER VISION PIPELINE
+                  </span>
+                  <Bot className="w-5 h-5 text-emerald-700" />
+                </div>
+
+                <div className="space-y-2.5 py-4">
+                  <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-800 flex items-center gap-2">
+                    <span>📸</span> <span>Real-Time ISL Camera Input Stream</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-800 flex items-center gap-2">
+                    <span>🧠</span> <span>MediaPipe 21-Point Landmark Extraction</span>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-sm text-xs font-medium text-slate-800 flex items-center gap-2">
+                    <span>🔊</span> <span>Confidence-Based Speech Synthesizer</span>
+                  </div>
+                </div>
+
+                <div className="text-[10px] font-mono text-center text-slate-500 bg-white/80 py-1 rounded-lg border border-slate-200">
+                  Active Prototype &bull; Flutter + TFLite
+                </div>
               </div>
             </div>
           </div>
+        </section>
+      )}
 
-          {/* JPED AI Prompt Simulation */}
-          <div className="space-y-4 p-6 rounded-2xl bg-space-950/80 border border-slate-800">
-            <h4 className="text-base font-orbitron font-bold text-white flex items-center space-x-2">
-              <span className="text-neon-cyan">02</span>
-              <span>JPED &bull; Adaptive AI Teacher Prompt Simulator</span>
-            </h4>
-            <p className="text-xs sm:text-sm text-slate-300 font-space">
-              Test the adaptive diagnostic explanation engine on any technical topic:
-            </p>
+      {/* 3. Additional Projects Grid */}
+      <section className="space-y-4">
+        <h2 
+          className="text-xl font-bold text-slate-900 tracking-tight"
+          style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+        >
+          Research & Concept Architectures
+        </h2>
 
-            <form onSubmit={handleJpedTest} className="flex gap-2.5">
-              <input
-                type="text"
-                value={jpedQuery}
-                onChange={(e) => setJpedQuery(e.target.value)}
-                placeholder="Ask any technical concept..."
-                className="flex-1 px-4 py-3 rounded-xl bg-space-900 border border-slate-800 text-white font-space text-xs focus:border-neon-cyan outline-none"
-              />
-              <button
-                type="submit"
-                className="px-5 py-3 rounded-xl bg-neon-cyan text-black font-orbitron font-bold text-xs uppercase tracking-wider shadow-neon-cyan cursor-pointer hover:bg-white transition-all flex items-center space-x-2"
-              >
-                <Send className="w-3.5 h-3.5" />
-                <span>EXPLAIN</span>
-              </button>
-            </form>
-
-            {jpedResponse && (
-              <div className="p-5 rounded-xl bg-space-900 border border-cyan-500/40 space-y-2.5 font-space animate-fade-in">
-                <div className="flex items-center justify-between border-b border-slate-800 pb-2 text-xs font-mono text-neon-cyan font-bold">
-                  <span>CONCEPT: {jpedResponse.concept}</span>
-                  <span>{jpedResponse.diagnostic}</span>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {otherProjects.map((proj) => (
+            <div
+              key={proj.id}
+              className="p-6 sm:p-7 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-sky-300 flex flex-col justify-between space-y-5 group"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+                  <span className="font-mono text-[10px] font-bold px-3 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+                    {proj.category}
+                  </span>
+                  <span className="font-mono text-[10px] text-slate-500">
+                    BLUEPRINT STAGE
+                  </span>
                 </div>
-                <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-                  {jpedResponse.explanation}
+
+                <h3 
+                  className="text-lg font-bold text-slate-900 group-hover:text-sky-600 transition-colors"
+                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                >
+                  {proj.title}
+                </h3>
+                <p className="text-xs font-semibold text-sky-700">
+                  {proj.subtitle}
                 </p>
+                <p className="text-xs text-slate-600 leading-relaxed font-light">
+                  {proj.problem}
+                </p>
+
+                {/* Stack */}
+                <div className="flex flex-wrap gap-1.5 pt-2">
+                  {proj.stack.map((s, idx) => (
+                    <span
+                      key={idx}
+                      className="font-mono text-[10px] font-semibold text-slate-600 px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-md"
+                    >
+                      {s}
+                    </span>
+                  ))}
+                </div>
               </div>
-            )}
+
+              <button
+                onClick={() => {
+                  sound.playSelect();
+                  setSelectedProject(proj);
+                }}
+                className="w-full py-2.5 rounded-xl font-mono font-semibold text-xs border border-sky-200 bg-sky-50 hover:bg-sky-500/20 text-sky-600 flex items-center justify-center space-x-2 transition-all cursor-pointer shadow-sm"
+              >
+                <span>EXPLORE FULL BLUEPRINT</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Detail Modal Overlay */}
+      {selectedProject && (
+        <div className="fixed inset-0 z-60 bg-slate-50 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-2xl rounded-2xl p-6 sm:p-8 bg-white border border-white/15 shadow-sm max-h-[85vh] overflow-y-auto space-y-6 animate-fade-in custom-scrollbar">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <div>
+                <span className="text-xs font-mono font-bold uppercase tracking-wider text-sky-700">
+                  {selectedProject.category}
+                </span>
+                <h2 
+                  className="text-2xl font-bold text-slate-900"
+                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                >
+                  {selectedProject.title}
+                </h2>
+              </div>
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer border border-slate-200"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="space-y-4 text-sm leading-relaxed text-slate-600">
+              <p className="whitespace-pre-line font-light">
+                {selectedProject.fullDescription}
+              </p>
+
+              <div className="space-y-2 pt-2">
+                <h4 className="font-bold text-base text-slate-900" style={{ fontFamily: "'Space Grotesk', sans-serif" }}>
+                  Key Capabilities & Architecture
+                </h4>
+                {selectedProject.highlights.map((hl, i) => (
+                  <div key={i} className="flex items-start space-x-2 text-slate-800">
+                    <CheckCircle2 className="w-4 h-4 shrink-0 mt-0.5 text-emerald-700" />
+                    <span>{hl}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="pt-4 border-t border-slate-200 flex justify-end">
+              <button
+                onClick={() => setSelectedProject(null)}
+                className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-900 font-mono font-semibold text-xs transition-all cursor-pointer shadow-lg shadow-sky-500/25"
+              >
+                CLOSE WINDOW
+              </button>
+            </div>
           </div>
         </div>
       )}

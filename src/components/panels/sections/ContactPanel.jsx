@@ -1,5 +1,23 @@
 import React, { useState } from 'react';
-import { Radio, Send, Terminal, Mail, Copy, Check, Sparkles, MessageSquare, Globe, ExternalLink } from 'lucide-react';
+import { 
+  Radio, 
+  Send, 
+  Terminal, 
+  Mail, 
+  Copy, 
+  Check, 
+  Sparkles, 
+  MessageSquare, 
+  Globe, 
+  ExternalLink, 
+  MessageCircle, 
+  MapPin, 
+  CheckCircle2, 
+  User, 
+  AtSign, 
+  AlignLeft,
+  Lock
+} from 'lucide-react';
 import { sound } from '../../../utils/audioEffects';
 
 const LinkedinIcon = ({ className = "w-4 h-4" }) => (
@@ -17,30 +35,39 @@ const GithubIcon = ({ className = "w-4 h-4" }) => (
 export default function ContactPanel() {
   const [copiedField, setCopiedField] = useState(null);
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
-  const [status, setStatus] = useState(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const contactLinks = [
     {
       id: 'email',
-      label: 'Direct Email',
+      label: 'DIRECT EMAIL',
       value: 'lingaraj24bcs151@gmail.com',
       display: 'lingaraj24bcs151@gmail.com',
       icon: Mail,
       action: 'mailto:lingaraj24bcs151@gmail.com'
     },
     {
+      id: 'location',
+      label: 'LOCATION',
+      value: 'Coimbatore, Tamil Nadu, India',
+      display: 'Coimbatore, Tamil Nadu, India',
+      icon: MapPin,
+      action: null
+    },
+    {
       id: 'linkedin',
-      label: 'LinkedIn Professional Profile',
+      label: 'PROFESSIONAL NETWORK',
       value: 'https://www.linkedin.com/in/lingaraj-v-4a1438328',
-      display: 'linkedin.com/in/lingaraj-v-4a1438328',
+      display: 'linkedin.com/in/lingaraj-v ↗',
       icon: LinkedinIcon,
       action: 'https://www.linkedin.com/in/lingaraj-v-4a1438328'
     },
     {
       id: 'github',
-      label: 'GitHub Code Repositories',
+      label: 'CODE REPOSITORIES',
       value: 'https://github.com/lingaraj310',
-      display: 'github.com/lingaraj310',
+      display: 'github.com/lingaraj310 ↗',
       icon: GithubIcon,
       action: 'https://github.com/lingaraj310'
     }
@@ -56,144 +83,225 @@ export default function ContactPanel() {
   const handleTransmit = (e) => {
     e.preventDefault();
     sound.playSelect();
-    setStatus('TRANSMITTING...');
+    setIsSubmitting(true);
     setTimeout(() => {
-      setStatus('TRANSMISSION DISPATCHED // MESSAGE RECORDED');
+      setIsSubmitting(false);
+      setIsSuccess(true);
       setFormData({ name: '', email: '', subject: '', message: '' });
-      setTimeout(() => setStatus(null), 5000);
+      setTimeout(() => setIsSuccess(false), 5000);
     }, 1200);
   };
 
   return (
-    <div className="space-y-8 animate-fade-in text-slate-200">
-      {/* Sector Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-5 rounded-2xl bg-space-900/80 border border-cyan-500/30">
+    <div className="select-none max-w-6xl mx-auto space-y-8 animate-fade-in font-sans text-slate-800">
+      {/* Top Banner Header */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300">
         <div>
-          <div className="flex items-center space-x-2 text-cyan-400 text-xs font-mono mb-1">
-            <span className="w-2 h-2 rounded-full bg-cyan-500 animate-ping" />
-            <span>SECTOR 07 // SINGAPORE HUB</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 font-mono text-[11px] font-semibold tracking-wider uppercase mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span>GET IN TOUCH</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-orbitron font-extrabold text-white">
-            Direct Communications & Social Links
+          <h2 
+            className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Let's Connect
           </h2>
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl font-light">
+            Interested in software engineering roles, collaborative innovation projects, or research fellowships? Feel free to reach out.
+          </p>
         </div>
 
-        <div className="px-3 py-1.5 rounded-lg bg-cyan-950/40 border border-cyan-500/30 text-cyan-300 text-xs font-mono">
-          FREQUENCY: 142.85 MHz // OPEN
+        <div className="px-4 py-1.5 rounded-full text-xs font-mono font-bold bg-emerald-50 border border-emerald-200 text-emerald-700 flex items-center gap-2 shrink-0">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          <span>INBOX ACTIVE // RESPONSIVE</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Left Side: Contact Direct Links */}
-        <div className="space-y-4">
-          <div className="p-6 rounded-2xl bg-gradient-to-br from-space-900 via-space-850 to-space-950 border border-slate-800 space-y-4">
-            <h3 className="font-orbitron font-bold text-lg text-white flex items-center space-x-2">
-              <Radio className="w-5 h-5 text-cyan-400 animate-pulse" />
-              <span>Verified Channels</span>
+      {/* Split Screen Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* LEFT COLUMN: Communication Channels (5 cols) */}
+        <div className="lg:col-span-5 p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm space-y-6 transition-all duration-300">
+          <div className="space-y-1">
+            <h3 
+              className="text-xl font-bold text-slate-900"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              Communication Channels
             </h3>
-            <p className="text-xs sm:text-sm text-slate-400 font-space leading-relaxed">
-              Open to engineering opportunities, software development roles, startup collaborations, and innovation projects.
+            <p className="text-xs text-slate-500 leading-relaxed font-light">
+              Reach out directly through email, connect on LinkedIn, or inspect my source code repositories on GitHub.
             </p>
+          </div>
 
-            <div className="space-y-3 pt-2">
-              {contactLinks.map((link) => {
-                const Icon = link.icon;
-                const isCopied = copiedField === link.id;
-                return (
-                  <div
-                    key={link.id}
-                    className="p-4 rounded-xl bg-space-950/70 border border-slate-800 hover:border-cyan-500/40 transition-all flex items-center justify-between gap-3 group"
-                  >
-                    <div className="flex items-center space-x-3 overflow-hidden">
-                      <div className="p-2.5 rounded-lg bg-space-900 text-cyan-400 group-hover:scale-110 group-hover:text-neon-cyan transition-all border border-slate-800 group-hover:border-cyan-500/50">
-                        <Icon className="w-4 h-4" />
-                      </div>
-                      <div className="overflow-hidden">
-                        <span className="text-[10px] font-mono text-slate-400 block uppercase font-bold">
-                          {link.label}
-                        </span>
+          <div className="space-y-3 pt-2">
+            {contactLinks.map((link) => {
+              const Icon = link.icon;
+              const isCopied = copiedField === link.id;
+
+              return (
+                <div
+                  key={link.id}
+                  className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-3 transition-all duration-200 hover:border-sky-300"
+                >
+                  <div className="flex items-center space-x-3.5 overflow-hidden">
+                    <div className="p-2.5 rounded-xl bg-sky-50 border border-sky-200 text-sky-700 shrink-0">
+                      <Icon className="w-4 h-4" />
+                    </div>
+                    <div className="overflow-hidden">
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider block text-slate-500">
+                        {link.label}
+                      </span>
+                      {link.action ? (
                         <a
                           href={link.action}
                           target="_blank"
                           rel="noreferrer"
-                          className="text-xs sm:text-sm font-mono text-white hover:text-cyan-300 transition-colors truncate block"
+                          className="text-xs font-semibold text-sky-700 truncate block hover:underline"
                         >
                           {link.display}
                         </a>
-                      </div>
+                      ) : (
+                        <span className="text-xs font-semibold text-slate-900 truncate block">
+                          {link.display}
+                        </span>
+                      )}
                     </div>
-
-                    <button
-                      onClick={() => handleCopy(link.id, link.value)}
-                      onMouseEnter={() => sound.playHover()}
-                      className="p-2.5 rounded-lg bg-space-900 hover:bg-cyan-950 border border-slate-800 hover:border-cyan-500 text-slate-400 hover:text-cyan-300 transition-all cursor-pointer shrink-0"
-                      title="Copy to clipboard"
-                    >
-                      {isCopied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
-                    </button>
                   </div>
-                );
-              })}
-            </div>
+
+                  <button
+                    onClick={() => handleCopy(link.id, link.value)}
+                    onMouseEnter={() => sound.playHover()}
+                    className="p-2 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-600 transition-colors cursor-pointer shrink-0 shadow-sm"
+                    title="Copy to clipboard"
+                  >
+                    {isCopied ? <Check className="w-4 h-4 text-emerald-700" /> : <Copy className="w-4 h-4" />}
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider block text-amber-700">
+              💡 ENGINEERING FOCUS
+            </span>
+            <p className="text-xs text-slate-600 leading-relaxed font-light">
+              Open to summer engineering internships, industrial research fellowships, computer vision pipelines & tech startup builds.
+            </p>
           </div>
         </div>
 
-        {/* Right Side: Interactive Transmission Form */}
-        <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-space-900 via-space-850 to-space-950 border border-slate-800 space-y-4">
-          <div className="flex items-center space-x-2 text-cyan-400">
-            <Terminal className="w-5 h-5" />
-            <h3 className="font-orbitron font-bold text-lg text-white">Send Direct Message</h3>
+        {/* RIGHT COLUMN: Contact Form (7 cols) */}
+        <div className="lg:col-span-7 p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm space-y-6 transition-all duration-300">
+          <div className="flex items-center space-x-2.5 border-b border-slate-200 pb-4">
+            <div className="p-2 rounded-xl bg-sky-50 text-sky-700 border border-sky-200">
+              <MessageCircle className="w-4 h-4" />
+            </div>
+            <h3 
+              className="text-xl font-bold text-slate-900"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              Send a Direct Message
+            </h3>
           </div>
 
-          <form onSubmit={handleTransmit} className="space-y-3 font-space text-xs">
-            <div>
-              <label className="text-slate-400 font-mono block mb-1">YOUR NAME</label>
+          <form onSubmit={handleTransmit} className="space-y-4">
+            
+            {/* Name Input */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-600 block">
+                YOUR NAME *
+              </label>
               <input
                 type="text"
                 required
-                placeholder="e.g. Recruiter / Collaborator"
+                placeholder="e.g. Dr. Ramesh Kumar / Jane Doe"
                 value={formData.name}
                 onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-space-950 border border-slate-800 focus:border-cyan-400 text-white outline-none font-mono text-xs transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:bg-slate-50 transition-all duration-200"
               />
             </div>
 
-            <div>
-              <label className="text-slate-400 font-mono block mb-1">YOUR EMAIL</label>
+            {/* Email Input */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-600 block">
+                YOUR EMAIL ADDRESS *
+              </label>
               <input
                 type="email"
                 required
-                placeholder="e.g. recruiter@company.com"
+                placeholder="e.g. name@domain.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-space-950 border border-slate-800 focus:border-cyan-400 text-white outline-none font-mono text-xs transition-colors"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:bg-slate-50 transition-all duration-200"
               />
             </div>
 
-            <div>
-              <label className="text-slate-400 font-mono block mb-1">MESSAGE</label>
+            {/* Subject Input */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-600 block">
+                SUBJECT
+              </label>
+              <input
+                type="text"
+                placeholder="e.g. Internship Opportunity / Technical Collaboration"
+                value={formData.subject}
+                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:bg-slate-50 transition-all duration-200"
+              />
+            </div>
+
+            {/* Message Textarea */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-bold text-slate-600 block">
+                MESSAGE *
+              </label>
               <textarea
                 required
                 rows={4}
-                placeholder="Enter message or project discussion details..."
+                placeholder="Describe the project, inquiry, or opportunity..."
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-space-950 border border-slate-800 focus:border-cyan-400 text-white outline-none font-space text-xs transition-colors resize-none"
+                className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs font-medium text-slate-900 placeholder:text-slate-500 outline-none focus:border-sky-500 focus:bg-slate-50 transition-all duration-200 resize-none"
               />
             </div>
 
+            {/* Submit Button */}
             <button
               type="submit"
+              disabled={isSubmitting}
               onMouseEnter={() => sound.playHover()}
-              className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-black font-orbitron font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 cursor-pointer transition-all shadow-lg shadow-cyan-500/20"
+              className="w-full py-3 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-900 font-mono font-bold text-xs uppercase tracking-wider flex items-center justify-center space-x-2 transition-all duration-200 shadow-lg shadow-sky-500/25 cursor-pointer hover:-translate-y-0.5"
             >
-              <Send className="w-4 h-4" />
-              <span>SEND MESSAGE</span>
+              {isSubmitting ? (
+                <>
+                  <span className="w-4 h-4 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                  <span>SENDING...</span>
+                </>
+              ) : (
+                <>
+                  <Send className="w-4 h-4" />
+                  <span>TRANSMIT MESSAGE</span>
+                </>
+              )}
             </button>
 
-            {status && (
-              <div className="p-3 rounded-xl bg-space-950 border border-cyan-400/50 text-cyan-300 font-mono text-xs text-center animate-fade-in">
-                {status}
+            {/* Form Notice */}
+            <div className="flex items-center gap-1.5 text-[11px] text-slate-500 pt-1">
+              <Lock className="w-3.5 h-3.5 text-sky-700" />
+              <span>Direct frontend submission. For urgent correspondence, email directly to <strong className="text-sky-600">lingaraj24bcs151@gmail.com</strong>.</span>
+            </div>
+
+            {/* Success Feedback Animation */}
+            {isSuccess && (
+              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center space-x-3 animate-fade-in">
+                <CheckCircle2 className="w-5 h-5 text-emerald-700 shrink-0" />
+                <div className="text-xs font-medium">
+                  <strong className="block font-bold">Message Transmitted!</strong>
+                  Thank you for reaching out. I will get back to you shortly.
+                </div>
               </div>
             )}
           </form>

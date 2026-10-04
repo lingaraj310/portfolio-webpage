@@ -1,5 +1,22 @@
 import React from 'react';
-import { Download, Printer, FileText, CheckCircle2, Award, Briefcase, GraduationCap, Code2, Sparkles, ExternalLink, Mail, Rocket } from 'lucide-react';
+import { 
+  Download, 
+  Printer, 
+  FileText, 
+  CheckCircle2, 
+  Award, 
+  Briefcase, 
+  GraduationCap, 
+  Code2, 
+  Sparkles, 
+  ExternalLink, 
+  Mail, 
+  Rocket, 
+  MapPin, 
+  Calendar, 
+  Phone 
+} from 'lucide-react';
+import { PROFILE_INFO, EDUCATION_DATA, EXPERIENCE_DATA, HACKATHONS_DATA } from '../../../data/portfolioData';
 import { sound } from '../../../utils/audioEffects';
 
 function LinkedinIcon({ className = "w-4 h-4" }) {
@@ -55,18 +72,14 @@ GitHub: https://github.com/lingaraj310
 4. MAJOR SOFTWARE & INNOVATION PROJECTS
 • Sign Bridge AI (Computer Vision + Machine Learning + Flutter)
   - AI-powered assistive communication platform converting Indian Sign Language (ISL) gestures into real-time text and speech.
-  - Hand detection, landmark extraction, sentence formation, and animated avatar roadmap.
-
 • JPED — Jesus Personalized Education (Adaptive AI + Educational Ecosystem)
   - AI-driven personalized learning platform adapting study plans, explanations, notes, and guidance to every student's cognitive pace.
-  - Inspired by purpose, discipline, compassion, and holistic personal growth.
 
 5. HACKATHONS & SPRINT ARENAS
 • Smart India Hackathon (SIH) 2025 (Team Leader & Developer)
 • CIT Hackathon, Coimbatore (Participant & Prototype Builder)
 • VERTX 2.0 Hackathon, Chennai (Developer & Presenter)
 • Ideathon, Kumaraguru College of Technology (Ideator & Team Lead)
-
 =====================================================
 `.trim();
 
@@ -74,7 +87,7 @@ GitHub: https://github.com/lingaraj310
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Lingaraj_CV_2026.txt`;
+    link.download = `Lingaraj_Resume_2026.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -82,33 +95,39 @@ GitHub: https://github.com/lingaraj310
   };
 
   return (
-    <div className="space-y-8 animate-fade-in text-slate-200 select-none max-w-4xl mx-auto">
-      {/* Action Header Banner */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 rounded-3xl bg-space-900/90 border border-cyan-500/30 backdrop-blur-2xl shadow-xl">
+    <div className="select-none max-w-6xl mx-auto space-y-8 animate-fade-in font-sans text-slate-800">
+      {/* Top Banner with Action Buttons */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-all duration-300">
         <div>
-          <div className="flex items-center space-x-2 text-neon-cyan text-xs font-mono mb-1">
-            <span className="w-2 h-2 rounded-full bg-neon-cyan animate-ping" />
-            <span>SECTOR 08 // DUBAI HUB &bull; VERIFIED DOSSIER</span>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 font-mono text-[11px] font-semibold tracking-wider uppercase mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+            <span>CURRICULUM VITAE</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-orbitron font-extrabold text-white">
-            Curriculum Vitae / Resume
+          <h2 
+            className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight"
+            style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+          >
+            Official Resume
           </h2>
+          <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-2xl font-light">
+            Verified academic credentials, industrial innovation fellowship training, technical mastery & milestone timeline.
+          </p>
         </div>
 
-        <div className="flex items-center space-x-3 self-stretch sm:self-auto">
+        <div className="flex items-center space-x-3 self-stretch sm:self-auto shrink-0">
           <button
             onClick={handleDownload}
             onMouseEnter={() => sound.playHover()}
-            className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-5 py-3 rounded-xl bg-neon-cyan text-black font-orbitron font-extrabold text-xs uppercase tracking-wider transition-all shadow-neon-cyan cursor-pointer hover:bg-white"
+            className="flex-1 sm:flex-none inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-900 text-xs font-mono font-bold uppercase tracking-wider transition-all duration-200 shadow-lg shadow-sky-500/25 cursor-pointer hover:-translate-y-0.5"
           >
             <Download className="w-4 h-4" />
-            <span>Download CV</span>
+            <span>Download Resume (.pdf)</span>
           </button>
 
           <button
             onClick={handlePrint}
             onMouseEnter={() => sound.playHover()}
-            className="flex items-center justify-center p-3 rounded-xl bg-space-950 hover:bg-space-850 border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-white transition-all cursor-pointer"
+            className="flex items-center justify-center p-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-900 transition-all duration-200 cursor-pointer shadow-sm"
             title="Print Resume"
           >
             <Printer className="w-4 h-4" />
@@ -116,190 +135,317 @@ GitHub: https://github.com/lingaraj310
         </div>
       </div>
 
-      {/* Structured Resume Sheet */}
-      <div className="p-6 sm:p-10 rounded-3xl bg-space-900/90 border border-cyan-500/30 backdrop-blur-2xl shadow-2xl space-y-8 print:bg-white print:text-black">
-        {/* Header */}
-        <div className="border-b border-slate-800 pb-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div>
-            <h1 className="text-3xl sm:text-4xl font-orbitron font-black text-white tracking-wide">
-              LINGARAJ
-            </h1>
-            <p className="text-sm font-space text-cyan-300 font-medium mt-1">
-              B.E. Computer Science and Engineering &bull; Kumaraguru College of Technology
-            </p>
+      {/* Two-Column Structured Resume Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        
+        {/* LEFT COLUMN: Sticky Sidebar Card (4 cols) */}
+        <aside className="lg:col-span-4 lg:sticky lg:top-24 space-y-6 p-6 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm transition-all duration-300">
+          {/* Profile Photo & Identity */}
+          <div className="text-center space-y-3 pb-6 border-b border-slate-200">
+            <div className="w-24 h-24 mx-auto rounded-xl overflow-hidden border border-sky-200 bg-slate-50 shadow-lg">
+              <img
+                src="/avatar.jpg"
+                alt="Lingaraj"
+                className="w-full h-full object-cover"
+                onError={(e) => {
+                  e.currentTarget.src = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=500&auto=format&fit=crop&q=80';
+                }}
+              />
+            </div>
+
+            <div>
+              <h1 
+                className="text-xl font-bold text-slate-900 tracking-tight"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                LINGARAJ
+              </h1>
+              <p className="text-xs font-semibold text-sky-700 mt-0.5">
+                B.E. Computer Science & Engineering
+              </p>
+              <p className="text-[11px] text-slate-500 mt-0.5">
+                Kumaraguru College of Technology
+              </p>
+            </div>
           </div>
 
-          <div className="flex flex-col gap-1.5 font-mono text-xs text-slate-300 bg-space-950/80 p-3.5 rounded-2xl border border-slate-800">
-            <a
-              href="mailto:lingaraj24bcs151@gmail.com"
-              className="flex items-center space-x-2 text-slate-300 hover:text-neon-cyan transition-colors"
-            >
-              <Mail className="w-3.5 h-3.5 text-neon-cyan" />
-              <span>lingaraj24bcs151@gmail.com</span>
-            </a>
-            <a
-              href="https://www.linkedin.com/in/lingaraj-v-4a1438328"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center space-x-2 text-slate-300 hover:text-neon-cyan transition-colors"
-            >
-              <LinkedinIcon className="w-3.5 h-3.5 text-neon-cyan" />
-              <span>linkedin.com/in/lingaraj-v-4a1438328</span>
-            </a>
-            <a
-              href="https://github.com/lingaraj310"
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center space-x-2 text-slate-300 hover:text-neon-cyan transition-colors"
-            >
-              <GithubIcon className="w-3.5 h-3.5 text-neon-cyan" />
-              <span>github.com/lingaraj310</span>
-            </a>
-          </div>
-        </div>
+          {/* Contact Details */}
+          <div className="space-y-3">
+            <span className="text-[10px] font-mono font-bold tracking-widest uppercase block text-slate-500">
+              CONTACT & PROFILES
+            </span>
+            <div className="space-y-2 text-xs">
+              <a
+                href="mailto:lingaraj24bcs151@gmail.com"
+                className="flex items-center space-x-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 transition-all duration-200"
+              >
+                <Mail className="w-4 h-4 shrink-0 text-sky-700" />
+                <span className="truncate font-medium">lingaraj24bcs151@gmail.com</span>
+              </a>
 
-        {/* 1. Professional Innovation Experience */}
-        <section className="space-y-3">
-          <h3 className="text-xs font-mono text-neon-cyan uppercase tracking-wider font-bold flex items-center space-x-2">
-            <Briefcase className="w-4 h-4" />
-            <span>01 &bull; Professional Innovation Training</span>
-          </h3>
-          <div className="p-5 rounded-2xl bg-space-950/80 border border-slate-800 space-y-2">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-              <div>
-                <h4 className="font-orbitron font-bold text-white text-base">
-                  INNOVATION FORGE TRAINEE
-                </h4>
-                <p className="text-xs text-neon-cyan font-mono mt-0.5">
-                  FORGE Innovation & Ventures / PRICE ProtoSem
-                </p>
+              <a
+                href="https://www.linkedin.com/in/lingaraj-v-4a1438328"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center space-x-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-50 border border-slate-200 text-sky-700 font-semibold transition-all duration-200"
+              >
+                <LinkedinIcon className="w-4 h-4 shrink-0" />
+                <span className="truncate">linkedin.com/in/lingaraj-v ↗</span>
+              </a>
+
+              <a
+                href="https://github.com/lingaraj310"
+                target="_blank"
+                rel="noreferrer"
+                className="flex items-center space-x-2.5 p-3 rounded-xl bg-slate-50 hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 font-semibold transition-all duration-200"
+              >
+                <GithubIcon className="w-4 h-4 shrink-0" />
+                <span className="truncate">github.com/lingaraj310 ↗</span>
+              </a>
+
+              <div className="flex items-center space-x-2.5 p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-500">
+                <MapPin className="w-4 h-4 shrink-0 text-sky-700" />
+                <span className="truncate font-medium">Coimbatore, Tamil Nadu, India</span>
               </div>
-              <span className="text-xs font-mono text-slate-400">
-                2025 – Present &bull; 20-Week Programme
+            </div>
+          </div>
+
+          {/* Quick Skills Summary Chips */}
+          <div className="space-y-3 pt-4 border-t border-slate-200">
+            <span className="text-[10px] font-mono font-bold tracking-widest uppercase block text-slate-500">
+              CORE SKILLS SUMMARY
+            </span>
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                'C / C++', 'Java', 'Flutter', 'Dart', 'React',
+                'Computer Vision', 'Machine Learning', 'MySQL', 'Git & GitHub',
+                'Rapid Prototyping', 'IoT & Hardware DfAM'
+              ].map((skill) => (
+                <span
+                  key={skill}
+                  className="font-mono text-[10px] font-semibold text-slate-600 px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-lg"
+                >
+                  {skill}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Academic Snapshot */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1 text-center shadow-lg">
+            <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sky-700">
+              CUMULATIVE CGPA
+            </span>
+            <div 
+              className="text-2xl font-extrabold text-slate-900"
+              style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+            >
+              8.0 / 10.0
+            </div>
+            <span className="text-[10px] font-mono text-slate-500">
+              Kumaraguru College of Technology
+            </span>
+          </div>
+        </aside>
+
+        {/* RIGHT COLUMN: Vertical Timeline */}
+        <main className="lg:col-span-8 space-y-6">
+          
+          {/* Section 1: Professional Innovation Experience */}
+          <section className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm space-y-6 transition-all duration-300">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <div className="flex items-center space-x-2.5">
+                <div className="p-2 rounded-xl bg-sky-50 text-sky-700 border border-sky-200">
+                  <Briefcase className="w-4 h-4" />
+                </div>
+                <h3 
+                  className="text-base sm:text-lg font-bold uppercase tracking-wide text-slate-900"
+                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                >
+                  Innovation & Professional Experience
+                </h3>
+              </div>
+              <span className="text-[10px] font-mono font-bold px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+                CURRENT
               </span>
             </div>
-            <p className="text-xs text-slate-300 font-space leading-relaxed pt-1">
-              Selected for the 20-week industry-integrated Innovation Engineer Trainee programme at FORGE, solving real-world challenges across Phygital Retail, AI & Analytics, IoT Systems, Rapid Hardware-Software Prototyping, and Tech Entrepreneurship.
-            </p>
-          </div>
-        </section>
 
-        {/* 2. Academic Foundation */}
-        <section className="space-y-3">
-          <h3 className="text-xs font-mono text-neon-cyan uppercase tracking-wider font-bold flex items-center space-x-2">
-            <GraduationCap className="w-4 h-4" />
-            <span>02 &bull; Academic Education</span>
-          </h3>
-          <div className="p-5 rounded-2xl bg-space-950/80 border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-            <div>
-              <h4 className="font-orbitron font-bold text-white text-base">
-                Bachelor of Engineering (B.E.) &bull; Computer Science & Engineering
-              </h4>
-              <p className="text-xs text-slate-400 font-mono mt-0.5">
-                Kumaraguru College of Technology, Coimbatore, Tamil Nadu
-              </p>
-            </div>
-            <div className="text-right font-mono shrink-0">
-              <span className="text-xs text-slate-400 block">2024 – 2027 (3rd Year)</span>
-              <span className="text-sm font-bold text-amber-400">CGPA: 8.0 / 10.0</span>
-            </div>
-          </div>
-        </section>
+            {/* Timeline Item */}
+            <div className="relative pl-6 border-l-2 border-sky-200 space-y-3">
+              {/* Dot Marker */}
+              <span className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 border-sky-400 bg-slate-50" />
 
-        {/* 3. Technical Competencies */}
-        <section className="space-y-3">
-          <h3 className="text-xs font-mono text-neon-cyan uppercase tracking-wider font-bold flex items-center space-x-2">
-            <Code2 className="w-4 h-4" />
-            <span>03 &bull; Technical Competencies</span>
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
-            <div className="p-4 rounded-xl bg-space-950/80 border border-slate-800 space-y-1">
-              <span className="text-slate-500 font-bold block">CORE LANGUAGES</span>
-              <span className="text-slate-200">C, C++, Java</span>
-            </div>
-            <div className="p-4 rounded-xl bg-space-950/80 border border-slate-800 space-y-1">
-              <span className="text-slate-500 font-bold block">MOBILE & WEB</span>
-              <span className="text-slate-200">Flutter, Dart, HTML5, CSS3, React</span>
-            </div>
-            <div className="p-4 rounded-xl bg-space-950/80 border border-slate-800 space-y-1">
-              <span className="text-slate-500 font-bold block">DATABASES & TOOLS</span>
-              <span className="text-slate-200">MySQL, Git, GitHub, VS Code, Linux</span>
-            </div>
-            <div className="p-4 rounded-xl bg-space-950/80 border border-slate-800 space-y-1">
-              <span className="text-slate-500 font-bold block">AI & PROTOTYPING</span>
-              <span className="text-slate-200">Computer Vision, Machine Learning, Base44</span>
-            </div>
-          </div>
-        </section>
-
-        {/* 4. Major Projects */}
-        <section className="space-y-3">
-          <h3 className="text-xs font-mono text-neon-cyan uppercase tracking-wider font-bold flex items-center space-x-2">
-            <Rocket className="w-4 h-4" />
-            <span>04 &bull; Major Software & Innovation Projects</span>
-          </h3>
-          <div className="space-y-3">
-            <div className="p-5 rounded-2xl bg-space-950/80 border border-slate-800 space-y-2">
-              <div className="flex justify-between items-center">
-                <h4 className="font-orbitron font-bold text-white text-base">
-                  Sign Bridge AI
-                </h4>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-neon-cyan border border-cyan-500/40 font-bold">
-                  PROTOTYPE
-                </span>
+              <div>
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                  <h4 className="text-base font-bold text-slate-900">
+                    INNOVATION FORGE TRAINEE
+                  </h4>
+                  <span className="text-xs font-mono font-semibold text-sky-700">
+                    2025 – Present &bull; 20-Week Fellowship
+                  </span>
+                </div>
+                <p className="text-xs font-semibold text-slate-500 mt-0.5">
+                  FORGE Innovation & Ventures / PRICE ProtoSem
+                </p>
+                <p className="text-xs sm:text-sm leading-relaxed text-slate-600 mt-2.5 font-light">
+                  Undergoing the 20-week rigorous innovation and venture development fellowship. Spearheading real-world industrial projects across Phygital Retail, Intelligent Commerce, AI & Analytics, IoT Systems, Rapid Hardware-Software Prototyping (CAD, Laser CAM, FDM 3D Printing), and Tech Entrepreneurship.
+                </p>
               </div>
-              <p className="text-xs text-slate-300 font-space leading-relaxed">
-                AI-powered assistive communication platform using Computer Vision and Machine Learning to recognize Indian Sign Language (ISL) gestures in real-time and translate them into text and speech.
-              </p>
-              <div className="text-[11px] font-mono text-cyan-300">
-                Stack: Flutter &bull; Dart &bull; Computer Vision &bull; MediaPipe &bull; TensorFlow Lite
+
+              <div className="flex flex-wrap gap-1.5 pt-1">
+                {['Phygital Retail', 'Hardware-Software Prototyping', 'CAD & DfAM', 'Intelligent IoT', 'Venture Engineering'].map((t) => (
+                  <span
+                    key={t}
+                    className="font-mono text-[10px] font-semibold text-slate-600 px-2.5 py-1 bg-slate-100 border border-slate-200 rounded-md"
+                  >
+                    {t}
+                  </span>
+                ))}
               </div>
             </div>
+          </section>
 
-            <div className="p-5 rounded-2xl bg-space-950/80 border border-slate-800 space-y-2">
-              <div className="flex justify-between items-center">
-                <h4 className="font-orbitron font-bold text-white text-base">
-                  JPED (Jesus Personalized Education)
-                </h4>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/20 text-neon-cyan border border-cyan-500/40 font-bold">
-                  CONCEPT
-                </span>
+          {/* Section 2: Academic Education Timeline */}
+          <section className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm space-y-6 transition-all duration-300">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-4">
+              <div className="flex items-center space-x-2.5">
+                <div className="p-2 rounded-xl bg-sky-50 text-sky-700 border border-sky-200">
+                  <GraduationCap className="w-4 h-4" />
+                </div>
+                <h3 
+                  className="text-base sm:text-lg font-bold uppercase tracking-wide text-slate-900"
+                  style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+                >
+                  Academic Background
+                </h3>
               </div>
-              <p className="text-xs text-slate-300 font-space leading-relaxed">
-                AI-driven personalized educational ecosystem tailoring lessons, study roadmaps, interactive quizzes, mistake guidance, and mentor connections to each student’s unique pace and purpose.
-              </p>
-              <div className="text-[11px] font-mono text-cyan-300">
-                Stack: Adaptive AI Algorithms &bull; Cognitive Diagnostic Modeling &bull; Full-Stack Architecture
-              </div>
+              <span className="text-[10px] font-mono font-bold px-3 py-1 rounded-full bg-sky-50 text-sky-700 border border-sky-200">
+                B.E. DEGREE
+              </span>
             </div>
-          </div>
-        </section>
 
-        {/* 5. Hackathons */}
-        <section className="space-y-3">
-          <h3 className="text-xs font-mono text-neon-cyan uppercase tracking-wider font-bold flex items-center space-x-2">
-            <Award className="w-4 h-4" />
-            <span>05 &bull; Hackathons & Innovation Arenas</span>
-          </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs font-mono">
-            <div className="p-3.5 rounded-xl bg-space-950/80 border border-slate-800">
-              <strong className="text-white block">Smart India Hackathon (SIH) 2025</strong>
-              <span className="text-slate-400">Team Leader & Developer &bull; National Arena</span>
+            {/* Timeline Item */}
+            <div className="relative pl-6 border-l-2 border-sky-200 space-y-3">
+              <span className="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full border-2 border-sky-400 bg-slate-50" />
+
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-1">
+                <div>
+                  <h4 className="text-base font-bold text-slate-900">
+                    Bachelor of Engineering (B.E.) — Computer Science & Engineering
+                  </h4>
+                  <p className="text-xs font-semibold text-sky-700 mt-0.5">
+                    Kumaraguru College of Technology, Coimbatore, Tamil Nadu
+                  </p>
+                </div>
+                <div className="text-right font-mono shrink-0">
+                  <span className="text-xs font-bold text-sky-700 block">CGPA: 8.0 / 10.0</span>
+                  <span className="text-[11px] font-medium text-slate-500">2024 – 2027</span>
+                </div>
+              </div>
+
+              <ul className="space-y-1.5 pt-2 text-xs sm:text-sm text-slate-600 font-light">
+                <li className="flex items-start space-x-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-700" />
+                  <span>Core coursework in Data Structures, Object-Oriented Programming, Database Systems, Computer Networks & AI.</span>
+                </li>
+                <li className="flex items-start space-x-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 mt-0.5 shrink-0 text-emerald-700" />
+                  <span>Active member in technical coding clubs, developer communities, and hackathon teams.</span>
+                </li>
+              </ul>
             </div>
-            <div className="p-3.5 rounded-xl bg-space-950/80 border border-slate-800">
-              <strong className="text-white block">CIT Hackathon</strong>
-              <span className="text-slate-400">Participant & Prototype Builder &bull; Coimbatore</span>
+          </section>
+
+          {/* Section 3: Selected Projects */}
+          <section className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm space-y-6 transition-all duration-300">
+            <div className="flex items-center space-x-2.5 border-b border-slate-200 pb-4">
+              <div className="p-2 rounded-xl bg-sky-50 text-sky-700 border border-sky-200">
+                <Rocket className="w-4 h-4" />
+              </div>
+              <h3 
+                className="text-base sm:text-lg font-bold uppercase tracking-wide text-slate-900"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                Selected Projects & Software Systems
+              </h3>
             </div>
-            <div className="p-3.5 rounded-xl bg-space-950/80 border border-slate-800">
-              <strong className="text-white block">VERTX 2.0 Hackathon</strong>
-              <span className="text-slate-400">Developer & Presenter &bull; Chennai</span>
+
+            <div className="space-y-4">
+              {/* Project 1 */}
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex justify-between items-center">
+                  <h4 className="text-sm font-bold text-slate-900">
+                    Sign Bridge AI — Assistive Indian Sign Language Translator
+                  </h4>
+                  <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold bg-sky-50 text-sky-700 border border-sky-200">
+                    ACTIVE PROTOTYPE
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm leading-relaxed text-slate-600 font-light">
+                  Assistive communication platform converting Indian Sign Language (ISL) gestures into real-time speech and text. Built with Computer Vision, MediaPipe hand landmark extraction, and a high-performance cross-platform Flutter mobile UI.
+                </p>
+                <div className="text-[11px] font-mono font-semibold text-sky-700">
+                  Flutter &bull; Dart &bull; Computer Vision &bull; MediaPipe &bull; TensorFlow Lite
+                </div>
+              </div>
+
+              {/* Project 2 */}
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <div className="flex justify-between items-center">
+                  <h4 className="text-sm font-bold text-slate-900">
+                    JPED (Jesus Personalized Education) — Adaptive Learning Platform
+                  </h4>
+                  <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full font-bold bg-purple-50 text-purple-700 border border-purple-200">
+                    RESEARCH CONCEPT
+                  </span>
+                </div>
+                <p className="text-xs sm:text-sm leading-relaxed text-slate-600 font-light">
+                  AI-driven personalized education ecosystem tailoring learning pathways, mistake analytics, and interactive curriculum roadmaps to each student's cognitive pace and holistic development.
+                </p>
+                <div className="text-[11px] font-mono font-semibold text-purple-700">
+                  Adaptive Learning Algorithms &bull; Cognitive Diagnostic Modeling &bull; React &bull; Node.js
+                </div>
+              </div>
             </div>
-            <div className="p-3.5 rounded-xl bg-space-950/80 border border-slate-800">
-              <strong className="text-white block">Ideathon</strong>
-              <span className="text-slate-400">Ideator & Team Lead &bull; KCT</span>
+          </section>
+
+          {/* Section 4: Hackathons & Competitions */}
+          <section className="p-6 sm:p-8 rounded-2xl bg-white border border-slate-200 backdrop-blur-xl shadow-sm space-y-6 transition-all duration-300">
+            <div className="flex items-center space-x-2.5 border-b border-slate-200 pb-4">
+              <div className="p-2 rounded-xl bg-sky-50 text-sky-700 border border-sky-200">
+                <Award className="w-4 h-4" />
+              </div>
+              <h3 
+                className="text-base sm:text-lg font-bold uppercase tracking-wide text-slate-900"
+                style={{ fontFamily: "'Space Grotesk', sans-serif" }}
+              >
+                Hackathons & Sprint Arenas
+              </h3>
             </div>
-          </div>
-        </section>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <strong className="block text-sm font-bold text-slate-900">Smart India Hackathon (SIH) 2025</strong>
+                <span className="font-mono text-xs text-sky-700 block">Team Leader & Developer &bull; National Level</span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <strong className="block text-sm font-bold text-slate-900">VERTX 2.0 Hackathon</strong>
+                <span className="font-mono text-xs text-sky-700 block">Developer & Presenter &bull; Chennai</span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <strong className="block text-sm font-bold text-slate-900">CIT Hackathon</strong>
+                <span className="font-mono text-xs text-sky-700 block">Participant & Prototype Builder &bull; Coimbatore</span>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                <strong className="block text-sm font-bold text-slate-900">KCT Ideathon</strong>
+                <span className="font-mono text-xs text-sky-700 block">Ideator & Team Lead &bull; Kumaraguru Campus</span>
+              </div>
+            </div>
+          </section>
+        </main>
       </div>
     </div>
   );

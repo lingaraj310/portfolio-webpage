@@ -2,24 +2,26 @@ import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
 import { LOCATIONS } from '../../data/portfolioData';
-import { generateLandParticles, latLngToVector3, createCurveBetweenPoints } from './geoData';
+import { latLngToVector3 } from './geoData';
+import { PlaneNavigator } from './PlaneNavigator';
 
 export default function GlobeCanvas({
   activeLocation,
   onSelectLocation,
   currentStage,
   onPinProject,
-  onTelemetryUpdate
+  onTelemetryUpdate,
+  zoomAction,
+  isAutoRotating = true,
+  flightsEnabled = true
 }) {
   const containerRef = useRef(null);
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const globeGroupRef = useRef(null);
-  const reticlesGroupRef = useRef(null);
-  const ribbonsGroupRef = useRef(null);
   const pinsGroupRef = useRef(null);
-  const networkArcsRef = useRef(null);
+  const planeNavigatorRef = useRef(null);
   const starFieldRef = useRef(null);
   const meteorsRef = useRef([]);
   const frameIdRef = useRef(null);
@@ -27,7 +29,12 @@ export default function GlobeCanvas({
   const previousMousePositionRef = useRef({ x: 0, y: 0 });
   const mousePosNormRef = useRef({ x: 0, y: 0 }); // -1 to 1 for cursor parallax
   const targetCameraOffsetRef = useRef({ x: 0, y: 0 });
+  const cloudsMeshRef = useRef(null);
   const autoRotateRef = useRef(true);
+  const currentStageRef = useRef(currentStage);
+  currentStageRef.current = currentStage;
+  const activeLocationRef = useRef(activeLocation);
+  activeLocationRef.current = activeLocation;
 
   // Globe Radius
   const GLOBE_RADIUS = 100;
@@ -46,7 +53,7 @@ export default function GlobeCanvas({
 
     const camera = new THREE.PerspectiveCamera(45, width / height, 1, 4500);
     cameraRef.current = camera;
-    camera.position.set(0, 0, 320);
+    camera.position.set(0, 0, 300);
     camera.lookAt(0, 0, 0);
 
     const renderer = new THREE.WebGLRenderer({
@@ -84,167 +91,126 @@ export default function GlobeCanvas({
     globeGroupRef.current = globeGroup;
     scene.add(globeGroup);
 
-    // 4a. Translucent Cyan Holographic Inner Sphere
-    const innerGeo = new THREE.SphereGeometry(GLOBE_RADIUS - 0.5, 64, 64);
-    const innerMat = new THREE.ShaderMaterial({
-      vertexShader: `
-        varying vec3 vNormal;
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vNormal;
-        void main() {
-          float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.4);
-          vec3 baseColor = vec3(0.01, 0.08, 0.22);
-          vec3 rimColor = vec3(0.0, 0.88, 1.0);
-          vec3 finalColor = mix(baseColor, rimColor, fresnel * 0.95);
-          gl_FragColor = vec4(finalColor, 0.65);
-        }
-      `,
-      transparent: true,
-      blending: THREE.AdditiveBlending,
-      side: THREE.FrontSide
-    });
-    const innerSphere = new THREE.Mesh(innerGeo, innerMat);
-    globeGroup.add(innerSphere);
+    // 4a. Photorealistic NASA Earth Texture Maps Loader
+    const textureLoader = new THREE.TextureLoader();
+    const dayMap = textureLoader.load('/textures/earth_day.jpg');
+    const nightMap = textureLoader.load('/textures/earth_lights.png');
+    const specularMap = textureLoader.load('/textures/earth_specular.jpg');
+    const normalMap = textureLoader.load('/textures/earth_normal.jpg');
+    const cloudsMap = textureLoader.load('/textures/earth_clouds.png');
 
-    // 4b. Holographic Coordinate Wireframe
-    const wireGeo = new THREE.SphereGeometry(GLOBE_RADIUS + 0.2, 36, 18);
-    const wireMat = new THREE.MeshBasicMaterial({
-      color: 0x00f0ff,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.12
-    });
-    const wireMesh = new THREE.Mesh(wireGeo, wireMat);
-    globeGroup.add(wireMesh);
-
-    // 4c. Luminous Digital Continental Pixels with RADIAL CLEARANCE MASK FOR PHOTO ZONE
-    const landParticlesData = generateLandParticles(5200);
-    const dotPositions = [];
-    const dotColors = [];
-    const cCyan = new THREE.Color(0x00f0ff);
-    const cBrightCyan = new THREE.Color(0x7dd3fc);
-    const cWhite = new THREE.Color(0xffffff);
-    const cIceBlue = new THREE.Color(0x38bdf8);
-
-    landParticlesData.forEach(pt => {
-      const altitude = 0.012 + (Math.sin(pt.lat * 0.1) * Math.cos(pt.lng * 0.1) + 1) * 0.012;
-      const pos = latLngToVector3(pt.lat, pt.lng, GLOBE_RADIUS, altitude);
-      dotPositions.push(pos.x, pos.y, pos.z);
-
-      const rand = Math.random();
-      const col = rand > 0.85 ? cWhite : rand > 0.5 ? cBrightCyan : rand > 0.25 ? cCyan : cIceBlue;
-      dotColors.push(col.r, col.g, col.b);
-    });
-
-    const dotsGeo = new THREE.BufferGeometry();
-    dotsGeo.setAttribute('position', new THREE.Float32BufferAttribute(dotPositions, 3));
-    dotsGeo.setAttribute('color', new THREE.Float32BufferAttribute(dotColors, 3));
-
-    // Custom Pixel Shader with Center Clearance Mask & Declared Uniforms
-    const dotsMat = new THREE.ShaderMaterial({
+    // 4b. Photorealistic Earth Sphere with Dynamic Day/Night & Ocean Specular Glint
+    const earthGeo = new THREE.SphereGeometry(GLOBE_RADIUS, 64, 64);
+    const earthMat = new THREE.ShaderMaterial({
       uniforms: {
-        uSize: { value: 2.4 * Math.min(window.devicePixelRatio, 2) }
+        uDayMap: { value: dayMap },
+        uNightMap: { value: nightMap },
+        uSpecularMap: { value: specularMap },
+        uNormalMap: { value: normalMap },
+        uSunDirection: { value: new THREE.Vector3(260, 160, 240).normalize() }
       },
       vertexShader: `
-        uniform float uSize;
-        attribute vec3 color;
-        varying vec3 vColor;
-        varying float vAlpha;
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 vSunDir;
+        varying vec3 vViewPosition;
+
+        uniform vec3 uSunDirection;
 
         void main() {
-          vColor = color;
+          vUv = uv;
+          vec4 worldPosition = modelMatrix * vec4(position, 1.0);
+          vNormal = normalize((modelMatrix * vec4(normal, 0.0)).xyz);
+          vSunDir = normalize(uSunDirection);
           vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
-
-          // Calculate distance from center line of sight in camera view
-          float centerDist = length(mvPosition.xy);
-
-          // Disappear completely within the photo and section radius (centerDist < 85.0)
-          if (mvPosition.z > -260.0 && centerDist < 85.0) {
-            vAlpha = smoothstep(55.0, 85.0, centerDist);
-          } else {
-            vAlpha = 1.0;
-          }
-
-          gl_PointSize = uSize * (220.0 / -mvPosition.z);
+          vViewPosition = -mvPosition.xyz;
           gl_Position = projectionMatrix * mvPosition;
         }
       `,
       fragmentShader: `
-        varying vec3 vColor;
-        varying float vAlpha;
+        varying vec2 vUv;
+        varying vec3 vNormal;
+        varying vec3 vSunDir;
+        varying vec3 vViewPosition;
+
+        uniform sampler2D uDayMap;
+        uniform sampler2D uNightMap;
+        uniform sampler2D uSpecularMap;
+        uniform sampler2D uNormalMap;
 
         void main() {
-          if (vAlpha <= 0.02) discard;
-          float dist = distance(gl_PointCoord, vec2(0.5));
-          if (dist > 0.5) discard;
-          float strength = pow((0.5 - dist) * 2.0, 1.2);
-          gl_FragColor = vec4(vColor, vAlpha * strength * 0.95);
+          vec3 normal = normalize(vNormal);
+          vec3 sunDir = normalize(vSunDir);
+          vec3 viewDir = normalize(vViewPosition);
+
+          // Smooth Day/Night terminator lighting
+          float NdotL = dot(normal, sunDir);
+          float dayIntensity = smoothstep(-0.15, 0.35, NdotL);
+          float nightIntensity = 1.0 - smoothstep(-0.25, 0.15, NdotL);
+
+          // Sample Earth textures
+          vec3 dayColor = texture2D(uDayMap, vUv).rgb;
+          vec3 nightLights = texture2D(uNightMap, vUv).rgb;
+          float specular = texture2D(uSpecularMap, vUv).r;
+
+          // Ocean Sun Glint (Specular highlight)
+          vec3 halfVector = normalize(sunDir + viewDir);
+          float NdotH = max(0.0, dot(normal, halfVector));
+          float specIntensity = pow(NdotH, 36.0) * specular * 1.8;
+
+          // Atmospheric horizon rim glow
+          float fresnel = pow(1.0 - max(0.0, dot(normal, viewDir)), 2.8);
+          vec3 atmosphereColor = vec3(0.12, 0.55, 1.0) * fresnel * max(0.15, dayIntensity + 0.12);
+
+          // Combine daylight surface, golden city night lights, ocean glare & atmosphere
+          vec3 finalColor = (dayColor * (dayIntensity * 0.95 + 0.05)) + 
+                            (nightLights * 2.2 * nightIntensity) + 
+                            (vec3(1.0, 0.95, 0.85) * specIntensity * dayIntensity) + 
+                            atmosphereColor;
+
+          gl_FragColor = vec4(finalColor, 1.0);
         }
-      `,
+      `
+    });
+    const earthMesh = new THREE.Mesh(earthGeo, earthMat);
+    globeGroup.add(earthMesh);
+
+    // 4c. Photorealistic Floating Cloud Layer (Drifts independently around Earth)
+    const cloudsGeo = new THREE.SphereGeometry(GLOBE_RADIUS + 0.8, 64, 64);
+    const cloudsMat = new THREE.MeshStandardMaterial({
+      map: cloudsMap,
       transparent: true,
+      opacity: 0.65,
       blending: THREE.AdditiveBlending,
       depthWrite: false
     });
+    const cloudsMesh = new THREE.Mesh(cloudsGeo, cloudsMat);
+    cloudsMeshRef.current = cloudsMesh;
+    globeGroup.add(cloudsMesh);
 
-    const dotsMesh = new THREE.Points(dotsGeo, dotsMat);
-    globeGroup.add(dotsMesh);
-
-    // 4d. Hexagonal Telemetry Honeycomb Clusters
-    buildHexagonTelemetryClusters(globeGroup, GLOBE_RADIUS);
-
-    // 4e. Floating Holographic Reticle Rings
-    const reticlesGroup = new THREE.Group();
-    reticlesGroupRef.current = reticlesGroup;
-    globeGroup.add(reticlesGroup);
-    buildFloatingHoloReticles(reticlesGroup, GLOBE_RADIUS);
-
-    // 4f. Glowing Curved Neon Laser Ribbons
-    const ribbonsGroup = new THREE.Group();
-    ribbonsGroupRef.current = ribbonsGroup;
-    globeGroup.add(ribbonsGroup);
-    buildGlowingLaserRibbons(ribbonsGroup, GLOBE_RADIUS);
-
-    // 4g. Outer Atmospheric Rayleigh Halo
-    const haloGeo = new THREE.SphereGeometry(GLOBE_RADIUS * 1.18, 64, 64);
-    const haloMat = new THREE.ShaderMaterial({
-      vertexShader: `
-        varying vec3 vNormal;
-        void main() {
-          vNormal = normalize(normalMatrix * normal);
-          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-        }
-      `,
-      fragmentShader: `
-        varying vec3 vNormal;
-        void main() {
-          float intensity = pow(0.72 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 2.8);
-          gl_FragColor = vec4(0.0, 0.88, 1.0, 1.0) * intensity * 0.95;
-        }
-      `,
-      blending: THREE.AdditiveBlending,
-      side: THREE.BackSide,
-      transparent: true
-    });
-    const haloMesh = new THREE.Mesh(haloGeo, haloMat);
-    globeGroup.add(haloMesh);
-
-    // 5. Fixed Physical Location Pins on Globe Surface
+    // 5. Clean Physical Location Pins on Photorealistic Earth Surface
     const pinsGroup = new THREE.Group();
     pinsGroupRef.current = pinsGroup;
     globeGroup.add(pinsGroup);
-
-    // 6. Network Arcs Group
-    const networkArcs = new THREE.Group();
-    networkArcsRef.current = networkArcs;
-    globeGroup.add(networkArcs);
-
     buildLocationPins(pinsGroup, GLOBE_RADIUS);
-    buildNetworkGraphArcs(networkArcs, GLOBE_RADIUS);
+
+    // 6. ONE Aeroplane as Current Location Indicator (Attached to Earth Group)
+    const planeNavigator = new PlaneNavigator();
+    planeNavigatorRef.current = planeNavigator;
+    planeNavigator.init(
+      globeGroup,
+      GLOBE_RADIUS,
+      (landedLoc) => {
+        if (onSelectLocation) {
+          onSelectLocation(landedLoc, true); // true = touchdown arrival
+        }
+      },
+      (telemetry) => {
+        if (onTelemetryUpdate) {
+          onTelemetryUpdate(telemetry);
+        }
+      }
+    );
 
     // Resize Handler
     const handleResize = () => {
@@ -263,7 +229,7 @@ export default function GlobeCanvas({
       const normY = -(e.clientY / window.innerHeight) * 2 + 1;
       mousePosNormRef.current = { x: normX, y: normY };
 
-      if (isDraggingRef.current && globeGroupRef.current && currentStage !== 'landed') {
+      if (isDraggingRef.current && globeGroupRef.current && currentStageRef.current !== 'landed') {
         const deltaX = e.clientX - previousMousePositionRef.current.x;
         const deltaY = e.clientY - previousMousePositionRef.current.y;
 
@@ -275,7 +241,7 @@ export default function GlobeCanvas({
     };
 
     const onMouseDown = (e) => {
-      if (currentStage === 'landed') return;
+      if (currentStageRef.current === 'landed') return;
       isDraggingRef.current = true;
       autoRotateRef.current = false;
       previousMousePositionRef.current = { x: e.clientX, y: e.clientY };
@@ -290,9 +256,17 @@ export default function GlobeCanvas({
       }, 2500);
     };
 
+    // Mouse Wheel Zoom
+    const onWheel = (e) => {
+      if (!cameraRef.current || currentStageRef.current === 'landed') return;
+      const newZ = cameraRef.current.position.z + e.deltaY * 0.18;
+      cameraRef.current.position.z = Math.max(180, Math.min(450, newZ));
+    };
+
     container.addEventListener('mousedown', onMouseDown);
     window.addEventListener('mousemove', onWindowMouseMove);
     window.addEventListener('mouseup', onMouseUp);
+    container.addEventListener('wheel', onWheel, { passive: true });
 
     const onTouchStart = (e) => { if (e.touches.length === 1) onMouseDown(e.touches[0]); };
     const onTouchMove = (e) => { if (e.touches.length === 1) onWindowMouseMove(e.touches[0]); };
@@ -307,51 +281,61 @@ export default function GlobeCanvas({
     const animate = (time) => {
       frameIdRef.current = requestAnimationFrame(animate);
 
-      const delta = (time - lastTime) * 0.001;
+      const delta = lastTime === 0 ? 0.016 : Math.min(0.06, (time - lastTime) * 0.001);
       lastTime = time;
 
       // CONTINUOUS AUTOMATIC REVOLUTION
       if (autoRotateRef.current && globeGroupRef.current) {
         globeGroupRef.current.rotation.y += 0.0014;
       }
+      if (cloudsMeshRef.current) {
+        cloudsMeshRef.current.rotation.y += 0.0005;
+      }
 
       // CURSOR GRAVITY CAMERA PARALLAX (Subtle physical weight)
-      if (cameraRef.current && currentStage === 'orbit') {
+      if (cameraRef.current && currentStageRef.current === 'orbit') {
         const targetX = mousePosNormRef.current.x * 12;
         const targetY = mousePosNormRef.current.y * 8;
-        targetCameraOffsetRef.current.x += (targetX - targetCameraOffsetRef.current.x) * 0.04;
-        targetCameraOffsetRef.current.y += (targetY - targetCameraOffsetRef.current.y) * 0.04;
-        cameraRef.current.position.x = targetCameraOffsetRef.current.x;
-        cameraRef.current.position.y = targetCameraOffsetRef.current.y;
-        cameraRef.current.lookAt(0, 0, 0);
+        if (targetCameraOffsetRef.current) {
+          targetCameraOffsetRef.current.x += (targetX - targetCameraOffsetRef.current.x) * 0.04;
+          targetCameraOffsetRef.current.y += (targetY - targetCameraOffsetRef.current.y) * 0.04;
+          cameraRef.current.position.x = targetCameraOffsetRef.current.x;
+          cameraRef.current.position.y = targetCameraOffsetRef.current.y;
+          cameraRef.current.lookAt(0, 0, 0);
+        }
       }
 
       // Animate Shooting Meteors
       animateMeteors(meteorsRef.current, delta);
 
-      // Animate Reticle dials rotation
-      if (reticlesGroupRef.current) {
-        reticlesGroupRef.current.children.forEach((child, i) => {
-          child.rotation.z += (i % 2 === 0 ? 0.0025 : -0.0018);
-        });
-      }
-
-      // Animate Laser Ribbons photon pulses
-      if (ribbonsGroupRef.current) {
-        ribbonsGroupRef.current.children.forEach(child => {
-          if (child.userData && child.userData.curve) {
-            child.userData.progress = (child.userData.progress + 0.008 * child.userData.speed) % 1;
-            const pt = child.userData.curve.getPoint(child.userData.progress);
-            child.position.set(pt.x, pt.y, pt.z);
+      // Animate 3D Location Map Pins (Gentle hover float & radar pulse)
+      if (pinsGroup) {
+        pinsGroup.children.forEach(pin => {
+          const ring = pin.getObjectByName('pulseRing');
+          if (ring) {
+            const scale = 1 + (Math.sin(time * 0.0035) + 1) * 0.22;
+            ring.scale.set(scale, scale, 1);
+          }
+          const radar = pin.getObjectByName('radarRing');
+          if (radar) {
+            radar.rotation.z -= 0.015;
+          }
+          const pinIcon = pin.getObjectByName('floatingPin');
+          if (pinIcon) {
+            pinIcon.rotation.y += 0.018;
+            const bob = Math.sin(time * 0.0028 + (pin.userData?.location?.lat || 0)) * 0.35;
+            pinIcon.position.y = 1.6 + bob;
           }
         });
       }
 
-      // Animate Pin beacon tips & network pulses
-      animatePinsAndArcs(pinsGroup, networkArcs, time * 0.001);
+      // Update ONE Location Indicator PlaneNavigator
+      if (planeNavigatorRef.current) {
+        planeNavigatorRef.current.update(delta);
+      }
 
-      // Live Telemetry Readout Callback
-      if (onTelemetryUpdate && globeGroupRef.current) {
+      // Live Telemetry Readout Callback (when idle)
+      if (onTelemetryUpdate && globeGroupRef.current && (!planeNavigatorRef.current || !planeNavigatorRef.current.isFlying)) {
         const rotYDeg = ((-globeGroupRef.current.rotation.y * 180 / Math.PI + 90) % 360 + 360) % 360 - 180;
         const rotXDeg = (globeGroupRef.current.rotation.x * 180 / Math.PI) / 0.4;
         onTelemetryUpdate({
@@ -381,6 +365,9 @@ export default function GlobeCanvas({
       container.removeEventListener('touchstart', onTouchStart);
       window.removeEventListener('touchmove', onTouchMove);
       window.removeEventListener('touchend', onTouchEnd);
+      if (planeNavigatorRef.current) {
+        planeNavigatorRef.current.dispose();
+      }
       if (renderer.domElement && renderer.domElement.parentNode) {
         renderer.domElement.parentNode.removeChild(renderer.domElement);
       }
@@ -519,126 +506,73 @@ export default function GlobeCanvas({
     });
   };
 
-  // 3. Hexagon Telemetry
-  const buildHexagonTelemetryClusters = (group, radius) => {
-    const hexHubs = [
-      { lat: 10.79, lng: 78.70 },
-      { lat: 35.67, lng: 139.65 },
-      { lat: 37.77, lng: -122.41 },
-      { lat: 51.50, lng: -0.12 },
-      { lat: 40.71, lng: -74.00 }
-    ];
+  // 3. Fixed Physical Location Pins on Globe Surface
+  // Helper: Creates a 3D Extruded Location Drop-Pin Icon with glowing center gem
+  const create3DLocationPinMesh = (isHome = false) => {
+    const pinGroup = new THREE.Group();
+    pinGroup.name = 'mapPinIcon';
 
-    hexHubs.forEach(hub => {
-      const pos = latLngToVector3(hub.lat, hub.lng, radius, 0.02);
-      const normal = new THREE.Vector3(pos.x, pos.y, pos.z).normalize();
+    // 1. Iconic 2D Path of Map Pin (Teardrop with center circular cutout)
+    const shape = new THREE.Shape();
+    const radius = 1.35;
+    const headCenterY = 3.2;
 
-      for (let h = 0; h < 3; h++) {
-        const hexGeo = new THREE.RingGeometry(2.5 + h * 2.8, 2.7 + h * 2.8, 6);
-        const hexMat = new THREE.MeshBasicMaterial({
-          color: 0x00f0ff,
-          side: THREE.DoubleSide,
-          transparent: true,
-          opacity: 0.4 - h * 0.1,
-          blending: THREE.AdditiveBlending
-        });
-        const hexMesh = new THREE.Mesh(hexGeo, hexMat);
-        hexMesh.position.set(pos.x, pos.y, pos.z);
-        hexMesh.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), normal);
-        group.add(hexMesh);
-      }
+    // Start at bottom sharp tip
+    shape.moveTo(0, 0);
+    // Left curve up towards round head
+    shape.bezierCurveTo(-1.6, 1.2, -radius * 1.3, headCenterY - 0.4, -radius, headCenterY);
+    // Round top arc
+    shape.absarc(0, headCenterY, radius, Math.PI, 0, false);
+    // Right curve back down to bottom sharp tip
+    shape.bezierCurveTo(radius * 1.3, headCenterY - 0.4, 1.6, 1.2, 0, 0);
+
+    // Inner circular window
+    const hole = new THREE.Path();
+    hole.absarc(0, headCenterY, 0.6, 0, Math.PI * 2, true);
+    shape.holes.push(hole);
+
+    // 2. Extrude into 3D Solid Geometry
+    const extrudeSettings = {
+      depth: 0.45,
+      bevelEnabled: true,
+      bevelSegments: 3,
+      steps: 1,
+      bevelSize: 0.1,
+      bevelThickness: 0.1
+    };
+    const pinGeo = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    // Center depth along Z
+    pinGeo.translate(0, 0, -0.225);
+
+    const pinMat = new THREE.MeshStandardMaterial({
+      color: isHome ? 0xffffff : 0x0284c7,
+      metalness: 0.88,
+      roughness: 0.15,
+      emissive: 0x00f0ff,
+      emissiveIntensity: isHome ? 0.65 : 0.45
     });
-  };
+    const pinMesh = new THREE.Mesh(pinGeo, pinMat);
+    pinGroup.add(pinMesh);
 
-  // 4. Reticles
-  const buildFloatingHoloReticles = (group, radius) => {
-    const dialGeo = new THREE.RingGeometry(radius * 1.22, radius * 1.24, 96);
-    const dialMat = new THREE.MeshBasicMaterial({
-      color: 0x00f0ff,
-      side: THREE.DoubleSide,
+    // 3. Glowing Center Core Gem / Orb
+    const coreGeo = new THREE.SphereGeometry(0.48, 16, 16);
+    const coreMat = new THREE.MeshBasicMaterial({
+      color: isHome ? 0xffffff : 0x00ffff,
       transparent: true,
-      opacity: 0.32,
-      blending: THREE.AdditiveBlending
+      opacity: 0.95
     });
-    const dialMesh = new THREE.Mesh(dialGeo, dialMat);
-    dialMesh.rotation.x = Math.PI / 2;
-    group.add(dialMesh);
+    const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+    coreMesh.position.set(0, headCenterY, 0);
+    pinGroup.add(coreMesh);
 
-    const tiltGeo = new THREE.RingGeometry(radius * 1.32, radius * 1.34, 64);
-    const tiltMat = new THREE.MeshBasicMaterial({
-      color: 0x38bdf8,
-      side: THREE.DoubleSide,
-      transparent: true,
-      opacity: 0.25,
-      blending: THREE.AdditiveBlending
-    });
-    const tiltMesh = new THREE.Mesh(tiltGeo, tiltMat);
-    tiltMesh.rotation.x = Math.PI / 3;
-    tiltMesh.rotation.y = Math.PI / 6;
-    group.add(tiltMesh);
+    // Scale slightly larger for Home base (India)
+    const s = isHome ? 1.3 : 1.1;
+    pinGroup.scale.set(s, s, s);
+
+    return pinGroup;
   };
 
-  // 5. Laser Ribbons
-  const buildGlowingLaserRibbons = (group, radius) => {
-    const ribbonPaths = [
-      [
-        { lat: 10.79, lng: 78.70 },
-        { lat: 45.0, lng: 110.0 },
-        { lat: 35.67, lng: 139.65 }
-      ],
-      [
-        { lat: 10.79, lng: 78.70 },
-        { lat: 30.0, lng: 30.0 },
-        { lat: 51.50, lng: -0.12 }
-      ],
-      [
-        { lat: 51.50, lng: -0.12 },
-        { lat: 55.0, lng: -45.0 },
-        { lat: 40.71, lng: -74.00 }
-      ],
-      [
-        { lat: 40.71, lng: -74.00 },
-        { lat: 25.0, lng: -100.0 },
-        { lat: 37.77, lng: -122.41 }
-      ]
-    ];
-
-    ribbonPaths.forEach((path, idx) => {
-      const v0 = latLngToVector3(path[0].lat, path[0].lng, radius, 0.02);
-      const v1 = latLngToVector3(path[1].lat, path[1].lng, radius, 0.45);
-      const v2 = latLngToVector3(path[2].lat, path[2].lng, radius, 0.02);
-
-      const curve = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3(v0.x, v0.y, v0.z),
-        new THREE.Vector3(v1.x, v1.y, v1.z),
-        new THREE.Vector3(v2.x, v2.y, v2.z)
-      );
-
-      const points = curve.getPoints(80);
-      const lineGeo = new THREE.BufferGeometry().setFromPoints(points);
-      const lineMat = new THREE.LineBasicMaterial({
-        color: 0x00f0ff,
-        transparent: true,
-        opacity: 0.7,
-        blending: THREE.AdditiveBlending
-      });
-      const lineMesh = new THREE.Line(lineGeo, lineMat);
-      group.add(lineMesh);
-
-      const flareGeo = new THREE.SphereGeometry(2.4, 16, 16);
-      const flareMat = new THREE.MeshBasicMaterial({
-        color: 0xffffff,
-        transparent: true,
-        opacity: 0.95,
-        blending: THREE.AdditiveBlending
-      });
-      const flareMesh = new THREE.Mesh(flareGeo, flareMat);
-      flareMesh.userData = { curve, speed: 0.4 + idx * 0.1, progress: (idx * 0.25) % 1 };
-      group.add(flareMesh);
-    });
-  };
-
-  // 6. Fixed Physical Location Pins on Globe Surface
+  // 3. Iconic 3D Location Map Pins on Globe Surface
   const buildLocationPins = (group, radius) => {
     LOCATIONS.forEach((loc) => {
       const pinContainer = new THREE.Group();
@@ -654,114 +588,112 @@ export default function GlobeCanvas({
 
       const isHome = loc.id === 'about';
 
-      // Glowing Cyan Stem
-      const stemHeight = isHome ? 12 : 8.5;
-      const stemGeo = new THREE.CylinderGeometry(0.4, 0.6, stemHeight, 16);
-      const stemMat = new THREE.MeshBasicMaterial({
+      // 1. Holographic Ground Runway Target Pad
+      // A. Inner glowing core dot
+      const coreGeo = new THREE.CircleGeometry(0.9, 24);
+      const coreMat = new THREE.MeshBasicMaterial({
         color: 0x00f0ff,
+        side: THREE.DoubleSide,
         transparent: true,
         opacity: 0.95
       });
-      const stemMesh = new THREE.Mesh(stemGeo, stemMat);
-      stemMesh.position.y = stemHeight / 2;
-      pinContainer.add(stemMesh);
+      const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+      coreMesh.rotation.x = Math.PI / 2;
+      coreMesh.position.y = 0.15;
+      pinContainer.add(coreMesh);
 
-      // Pulsing Base Ground Ring
-      const pulseGeo = new THREE.RingGeometry(1.6, 3.8, 32);
+      // B. Rotating Middle Radar Reticle Ring
+      const radarGeo = new THREE.RingGeometry(1.6, 2.1, 32);
+      const radarMat = new THREE.MeshBasicMaterial({
+        color: 0x00f0ff,
+        side: THREE.DoubleSide,
+        transparent: true,
+        opacity: 0.75,
+        blending: THREE.AdditiveBlending
+      });
+      const radarRing = new THREE.Mesh(radarGeo, radarMat);
+      radarRing.rotation.x = Math.PI / 2;
+      radarRing.position.y = 0.2;
+      radarRing.name = 'radarRing';
+      pinContainer.add(radarRing);
+
+      // C. Pulsing Outer Ground Boundary Ring
+      const pulseGeo = new THREE.RingGeometry(2.8, 3.4, 32);
       const pulseMat = new THREE.MeshBasicMaterial({
         color: 0x00f0ff,
         side: THREE.DoubleSide,
         transparent: true,
-        opacity: 0.85,
+        opacity: 0.45,
         blending: THREE.AdditiveBlending
       });
       const pulseRing = new THREE.Mesh(pulseGeo, pulseMat);
       pulseRing.rotation.x = Math.PI / 2;
-      pulseRing.position.y = 0.2;
+      pulseRing.position.y = 0.22;
       pulseRing.name = 'pulseRing';
       pinContainer.add(pulseRing);
+
+      // D. Crosshair Ticks (4 directional brackets on ground pad)
+      for (let t = 0; t < 4; t++) {
+        const tickGeo = new THREE.PlaneGeometry(0.2, 1.2);
+        const tickMat = new THREE.MeshBasicMaterial({
+          color: 0x00f0ff,
+          side: THREE.DoubleSide,
+          transparent: true,
+          opacity: 0.85
+        });
+        const tick = new THREE.Mesh(tickGeo, tickMat);
+        tick.rotation.x = Math.PI / 2;
+        tick.rotation.z = (t * Math.PI) / 2;
+        tick.position.set(Math.cos(t * Math.PI / 2) * 3.6, 0.25, Math.sin(t * Math.PI / 2) * 3.6);
+        pinContainer.add(tick);
+      }
+
+      // 2. Translucent Light Beacon Beam connecting ground to Pin Tip
+      const beamHeight = 1.8;
+      const beamGeo = new THREE.CylinderGeometry(0.18, 0.7, beamHeight, 16, 1, true);
+      const beamMat = new THREE.MeshBasicMaterial({
+        color: 0x00f0ff,
+        transparent: true,
+        opacity: 0.38,
+        side: THREE.DoubleSide,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const beamMesh = new THREE.Mesh(beamGeo, beamMat);
+      beamMesh.position.y = beamHeight / 2;
+      pinContainer.add(beamMesh);
+
+      // 3. 3D Floating Location Map Pin Icon (Hovering & Pointing to Target Pad)
+      const mapPin = create3DLocationPinMesh(isHome);
+      mapPin.position.y = 1.6;
+      mapPin.name = 'floatingPin';
+      pinContainer.add(mapPin);
+
+      // 4. Reference Tip Anchor for 2D UI Card Positioning
+      const tipAnchor = new THREE.Object3D();
+      tipAnchor.position.set(0, isHome ? 7.6 : 6.6, 0);
+      tipAnchor.name = 'pinTip';
+      pinContainer.add(tipAnchor);
 
       group.add(pinContainer);
     });
   };
 
-  // 7. Network Arcs
-  const buildNetworkGraphArcs = (group, radius) => {
-    const home = LOCATIONS.find(l => l.id === 'about');
-    if (!home) return;
-
-    LOCATIONS.filter(l => l.id !== 'about').forEach((dest) => {
-      const { start, controlPoint, end } = createCurveBetweenPoints(
-        home.lat, home.lng,
-        dest.lat, dest.lng,
-        radius,
-        0.28
-      );
-
-      const curve = new THREE.QuadraticBezierCurve3(
-        new THREE.Vector3(start.x, start.y, start.z),
-        new THREE.Vector3(controlPoint.x, controlPoint.y, controlPoint.z),
-        new THREE.Vector3(end.x, end.y, end.z)
-      );
-
-      const points = curve.getPoints(60);
-      const curveGeo = new THREE.BufferGeometry().setFromPoints(points);
-      const curveMat = new THREE.LineBasicMaterial({
-        color: 0x00f0ff,
-        transparent: true,
-        opacity: 0.45,
-        blending: THREE.AdditiveBlending
-      });
-      const arcLine = new THREE.Line(curveGeo, curveMat);
-      group.add(arcLine);
-
-      const pulsePointGeo = new THREE.SphereGeometry(1.4, 12, 12);
-      const pulsePointMat = new THREE.MeshBasicMaterial({
-        color: 0x00f0ff,
-        transparent: true,
-        opacity: 0.95,
-        blending: THREE.AdditiveBlending
-      });
-      const pulseMesh = new THREE.Mesh(pulsePointGeo, pulsePointMat);
-      pulseMesh.name = `arcPulse-${dest.id}`;
-      pulseMesh.userData = { curve, speed: 0.35 + Math.random() * 0.2, progress: Math.random() };
-      group.add(pulseMesh);
-    });
-  };
-
-  // Animate Pins & Arc Pulses
-  const animatePinsAndArcs = (pinsGroup, arcsGroup, time) => {
-    pinsGroup.children.forEach(pin => {
-      const ring = pin.getObjectByName('pulseRing');
-      if (ring) {
-        const scale = 1 + (Math.sin(time * 4) + 1) * 0.35;
-        ring.scale.set(scale, scale, 1);
-      }
-    });
-
-    arcsGroup.children.forEach(obj => {
-      if (obj.name && obj.name.startsWith('arcPulse-')) {
-        obj.userData.progress = (obj.userData.progress + 0.005 * obj.userData.speed) % 1;
-        const pt = obj.userData.curve.getPoint(obj.userData.progress);
-        obj.position.set(pt.x, pt.y, pt.z);
-      }
-    });
-  };
-
-  // Project 3D Pins to 2D
+  // Project 3D Pins to 2D Screen Space
   const updateProjectedPins = (pinsGroup, camera, width, height) => {
     const projected = {};
     pinsGroup.children.forEach(pin => {
       const loc = pin.userData.location;
       if (!loc) return;
 
+      const tip = pin.getObjectByName('pinTip') || pin;
       const worldPos = new THREE.Vector3();
-      pin.getWorldPosition(worldPos);
+      tip.getWorldPosition(worldPos);
 
       const cameraDir = camera.position.clone().normalize();
       const pinDir = worldPos.clone().normalize();
       const dot = cameraDir.dot(pinDir);
-      const isVisible = dot > 0.15;
+      const isVisible = dot > 0.22;
 
       const screenPos = worldPos.clone().project(camera);
       const x = (screenPos.x * 0.5 + 0.5) * width;
@@ -771,6 +703,7 @@ export default function GlobeCanvas({
         x,
         y,
         isVisible,
+        dot,
         depth: screenPos.z,
         location: loc
       };
@@ -779,12 +712,21 @@ export default function GlobeCanvas({
     onPinProject(projected);
   };
 
-  // 8. Revolve Earth to Center Destination on Section Click & Hyperspace Warp Jump
+  // 4. Camera & Globe Rotation Sync across lifecycle states
   useEffect(() => {
     if (!cameraRef.current || !globeGroupRef.current) return;
 
     const camera = cameraRef.current;
     const globe = globeGroupRef.current;
+
+    const isDesktop = window.innerWidth >= 1024;
+    const targetGlobeX = currentStage === 'orbit' && isDesktop ? 46 : 0;
+
+    gsap.to(globe.position, {
+      x: targetGlobeX,
+      duration: 2.0,
+      ease: 'power3.inOut'
+    });
 
     if (currentStage === 'hero') {
       autoRotateRef.current = true;
@@ -792,7 +734,7 @@ export default function GlobeCanvas({
       gsap.to(camera.position, {
         x: 0,
         y: 0,
-        z: 320,
+        z: 300,
         duration: 2.2,
         ease: 'power2.out'
       });
@@ -807,18 +749,22 @@ export default function GlobeCanvas({
       gsap.to(camera.position, {
         x: 0,
         y: 0,
-        z: 220,
+        z: 335,
         duration: 2.8,
         ease: 'power3.out'
       });
 
       const target = LOCATIONS[0];
-      const targetRotY = -((target.lng - 90) * Math.PI / 180);
-      const targetRotX = (target.lat * Math.PI / 180) * 0.4;
+      const targetRotY = -((target.lng + 90) * Math.PI / 180);
+      const targetRotX = (target.lat * Math.PI / 180);
+
+      const currentRotY = globe.rotation.y;
+      const diffY = ((targetRotY - currentRotY) % (Math.PI * 2) + Math.PI * 3) % (Math.PI * 2) - Math.PI;
+      const smoothTargetRotY = currentRotY + diffY;
 
       gsap.to(globe.rotation, {
         x: targetRotX,
-        y: targetRotY,
+        y: smoothTargetRotY,
         duration: 2.8,
         ease: 'power3.inOut',
         onComplete: () => {
@@ -828,35 +774,83 @@ export default function GlobeCanvas({
       return;
     }
 
-    if (currentStage === 'traveling' || currentStage === 'landed') {
-      const target = activeLocation || LOCATIONS[0];
+    if (currentStage === 'orbit' && activeLocation) {
+      const target = activeLocation;
+      const targetRotY = -((target.lng + 90) * Math.PI / 180);
+      const targetRotX = (target.lat * Math.PI / 180);
 
-      const targetRotY = -((target.lng - 90) * Math.PI / 180);
-      const targetRotX = (target.lat * Math.PI / 180) * 0.4;
+      const currentRotY = globe.rotation.y;
+      const diffY = ((targetRotY - currentRotY) % (Math.PI * 2) + Math.PI * 3) % (Math.PI * 2) - Math.PI;
+      const smoothTargetRotY = currentRotY + diffY;
 
       gsap.killTweensOf(globe.rotation);
       gsap.to(globe.rotation, {
         x: targetRotX,
-        y: targetRotY,
-        duration: 2.2,
-        ease: 'power3.inOut',
+        y: smoothTargetRotY,
+        duration: 1.4,
+        ease: 'power2.out',
         onComplete: () => {
           autoRotateRef.current = true;
         }
       });
+      return;
+    }
 
-      // Hyperspace rush transition when landing
-      const distance = currentStage === 'landed' ? 160 : 210;
-      gsap.killTweensOf(camera.position);
-      gsap.to(camera.position, {
-        x: 0,
-        y: 0,
-        z: distance,
-        duration: 1.8,
-        ease: 'power3.inOut'
+    if (currentStage === 'traveling' && activeLocation) {
+      autoRotateRef.current = false;
+      const destination = activeLocation;
+
+      // 1. Tell PlaneNavigator to fly from current location to destination
+      if (planeNavigatorRef.current) {
+        planeNavigatorRef.current.flyTo(destination);
+      }
+
+      // 2. Smoothly rotate globe so that the route/destination faces the camera
+      const currentRotY = globe.rotation.y;
+      const currentRotX = globe.rotation.x;
+
+      const endRotY = -((destination.lng + 90) * Math.PI / 180);
+      const endRotX = (destination.lat * Math.PI / 180);
+
+      const diffY = ((endRotY - currentRotY) % (Math.PI * 2) + Math.PI * 3) % (Math.PI * 2) - Math.PI;
+      const smoothEndRotY = currentRotY + diffY;
+
+      const duration = planeNavigatorRef.current?.flightDuration || 3.2;
+
+      gsap.killTweensOf(globe.rotation);
+      gsap.to(globe.rotation, {
+        x: endRotX,
+        y: smoothEndRotY,
+        duration: duration,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          autoRotateRef.current = true;
+        }
       });
+      return;
+    }
+
+    if (currentStage === 'landed') {
+      return;
     }
   }, [activeLocation, currentStage]);
+
+  // Sync isAutoRotating state with globe rotation
+  useEffect(() => {
+    autoRotateRef.current = isAutoRotating;
+  }, [isAutoRotating]);
+
+  // Handle Zoom In / Out from controls
+  useEffect(() => {
+    if (!cameraRef.current || currentStage === 'landed' || !zoomAction) return;
+    if (zoomAction.type === 'in') {
+      const targetZ = Math.max(145, cameraRef.current.position.z - 35);
+      gsap.to(cameraRef.current.position, { z: targetZ, duration: 0.5, ease: 'power2.out' });
+    } else if (zoomAction.type === 'out') {
+      const targetZ = Math.min(380, cameraRef.current.position.z + 35);
+      gsap.to(cameraRef.current.position, { z: targetZ, duration: 0.5, ease: 'power2.out' });
+    }
+  }, [zoomAction, currentStage]);
 
   return (
     <div

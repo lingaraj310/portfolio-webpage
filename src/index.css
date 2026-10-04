@@ -128,4 +128,74 @@
     background-size: 100% 4px, 8px 100%;
     pointer-events: none;
   }
+
+  /* Light Theme Dot Grids for Sections */
+  .light-grid-blue {
+    background-image: radial-gradient(rgba(37, 99, 235, 0.12) 1.2px, transparent 1.2px),
+                      radial-gradient(rgba(14, 165, 233, 0.08) 1.2px, transparent 1.2px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .light-grid-emerald {
+    background-image: radial-gradient(rgba(16, 185, 129, 0.13) 1.2px, transparent 1.2px),
+                      radial-gradient(rgba(13, 148, 136, 0.08) 1.2px, transparent 1.2px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .light-grid-violet {
+    background-image: radial-gradient(rgba(124, 58, 237, 0.12) 1.2px, transparent 1.2px),
+                      radial-gradient(rgba(99, 102, 241, 0.08) 1.2px, transparent 1.2px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .light-grid-amber {
+    background-image: radial-gradient(rgba(217, 119, 6, 0.12) 1.2px, transparent 1.2px),
+                      radial-gradient(rgba(245, 158, 11, 0.08) 1.2px, transparent 1.2px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .light-grid-cyan {
+    background-image: radial-gradient(rgba(6, 182, 212, 0.14) 1.2px, transparent 1.2px),
+                      radial-gradient(rgba(2, 132, 199, 0.09) 1.2px, transparent 1.2px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .light-grid-coral {
+    background-image: radial-gradient(rgba(234, 88, 12, 0.12) 1.2px, transparent 1.2px),
+                      radial-gradient(rgba(225, 29, 72, 0.08) 1.2px, transparent 1.2px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  .light-grid-slate {
+    background-image: radial-gradient(rgba(71, 85, 105, 0.12) 1.2px, transparent 1.2px),
+                      radial-gradient(rgba(100, 116, 139, 0.08) 1.2px, transparent 1.2px);
+    background-size: 24px 24px, 48px 48px;
+    background-position: 0 0, 12px 12px;
+  }
+
+  /* Custom Light Theme Scrollbars for Section Rooms */
+  .light-scrollbar-blue::-webkit-scrollbar-track { background: rgba(239, 246, 255, 0.8); }
+  .light-scrollbar-blue::-webkit-scrollbar-thumb { background: #3b82f6; box-shadow: 0 0 6px rgba(59, 130, 246, 0.4); }
+  
+  .light-scrollbar-emerald::-webkit-scrollbar-track { background: rgba(236, 253, 245, 0.8); }
+  .light-scrollbar-emerald::-webkit-scrollbar-thumb { background: #10b981; box-shadow: 0 0 6px rgba(16, 185, 129, 0.4); }
+
+  .light-scrollbar-violet::-webkit-scrollbar-track { background: rgba(245, 243, 255, 0.8); }
+  .light-scrollbar-violet::-webkit-scrollbar-thumb { background: #8b5cf6; box-shadow: 0 0 6px rgba(139, 92, 246, 0.4); }
+
+  .light-scrollbar-amber::-webkit-scrollbar-track { background: rgba(254, 252, 232, 0.8); }
+  .light-scrollbar-amber::-webkit-scrollbar-thumb { background: #f59e0b; box-shadow: 0 0 6px rgba(245, 158, 11, 0.4); }
+
+  .light-scrollbar-cyan::-webkit-scrollbar-track { background: rgba(236, 254, 255, 0.8); }
+  .light-scrollbar-cyan::-webkit-scrollbar-thumb { background: #06b6d4; box-shadow: 0 0 6px rgba(6, 182, 212, 0.4); }
+
+  .light-scrollbar-slate::-webkit-scrollbar-track { background: rgba(241, 245, 249, 0.8); }
+  .light-scrollbar-slate::-webkit-scrollbar-thumb { background: #64748b; box-shadow: 0 0 6px rgba(100, 116, 139, 0.4); }
 }
+
